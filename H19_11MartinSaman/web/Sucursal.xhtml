@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Sucursales</title>
+    </h:head>
+    <h:body>
+        <ui:include src="Menu.xhtml"/>
+        <h:form id="frmRegistrarSucursal">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="Nombre"/>
+                <p:inputText value="#{sucursalC.sucursal.NOMSUC}" required="true" requiredMessage="Ingresar nombre sucursal"/>
+                <p:outputLabel value="Dirección"/>
+                <p:inputText value="#{sucursalC.sucursal.DIRSUC}" required="true" requiredMessage="Ingresar dirección de sucursal"/>
+            </h:panelGrid>
+            <p:commandButton value="Guardar" actionListener="#{sucursalC.registrar()}" 
+                             update="frmRegistrarSucursal :frmDatosSucursal"/>
+        </h:form>
+        <h:form id="frmDatosSucursal">
+            <p:dataTable id="tblSucursal" var="sucursal" 
+                         selection="#{sucursalC.sucursalSeleccionada}"
+                         selectionMode="single"
+                         rowKey="#{sucursal.IDSUC}"
+                         value="#{sucursalC.listaSucursal}">
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{sucursal.NOMSUC}"/>
+                </p:column>
+                <p:column headerText="Dirección">
+                    <h:outputText value="#{sucursal.DIRSUC}"/>
+                </p:column>
+
+            </p:dataTable>
+            <p:contextMenu for="tblSucursal">
+                <p:menuitem value="Modificar" oncomplete="PF('dlgModSucursal').show();" update=":frmModSucursal"/>
+                <p:menuitem value="Eliminar" actionListener="#{sucursalC.eliminar()}" update="frmDatosSucursal"/>
+            </p:contextMenu>
+        </h:form>
+        <p:dialog widgetVar="dlgModSucursal">
+            <h:form id="frmModSucursal">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Nombre"/>
+                    <p:inputText value="#{sucursalC.sucursalSeleccionada.NOMSUC}" required="true" requiredMessage="Ingresar nombre sucursal"/>
+                    <p:outputLabel value="Dirección"/>
+                    <p:inputText value="#{sucursalC.sucursalSeleccionada.DIRSUC}" required="true" requiredMessage="Ingresar dirección de sucursal"/>
+                </h:panelGrid>
+                <p:commandButton value="Modificar" actionListener="#{sucursalC.editar()}" 
+                                 update="frmModSucursal :frmDatosSucursal" oncomplete="PF('dlgModSucursal').hide();"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

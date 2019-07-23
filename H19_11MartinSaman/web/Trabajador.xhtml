@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:include src="Menu.xhtml"/>
+        <h:form id="frmRegistrarTrabajador">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="Persona"/>
+                <p:selectOneMenu required="true" filter="true" filterMatchMode="contains"
+                                 value="#{trabajadorC.trabajador.persona.IDPER}">
+                    <f:selectItems value="#{personaC.listaPrsona}" var="persona" 
+                                   itemLabel="#{persona.NOMPER} #{persona.APEPER}" itemValue="#{persona.IDPER}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Sucursal"/>
+                <p:selectOneMenu filter="true" filterMatchMode="contains" required="true"
+                                 value="#{trabajadorC.trabajador.sucursal.IDSUC}">
+                    <f:selectItems value="#{sucursalC.listaSucursal}" var="sucursal"
+                                   itemLabel="#{sucursal.NOMSUC} - #{sucursal.DIRSUC}" itemValue="#{sucursal.IDSUC}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Tipo de Trabajador"/>
+                <p:selectOneRadio value="#{trabajadorC.trabajador.TIPTRAB}" required="true">
+                    <f:selectItem itemValue="A" itemLabel="Administrador"/>
+                    <f:selectItem itemValue="J" itemLabel="Jefe de Sucursal"/>
+                    <f:selectItem itemValue="V" itemLabel="Vendedor"/>
+                </p:selectOneRadio>
+                <p:outputLabel value="Fecha Inicio labores"/>
+                <p:calendar value="#{trabajadorC.trabajador.FECINITRAB}" required="true"/>
+            </h:panelGrid>
+            <p:commandButton value="Guardar" actionListener="#{trabajadorC.registrar()}" update="frmRegistrarTrabajador :frmTblTrab"/>
+        </h:form>
+        <h:form id="frmTblTrab">
+            <p:dataTable id="tblTrabajador" var="trabajador" 
+                         selection="#{trabajadorC.trabajadorSeleccionado}"
+                         selectionMode="single"
+                         rowKey="#{trabajador.IDTRAB}"
+                         value="#{trabajadorC.listaTrabajador}">
+                <p:column headerText="Nombres y Apellidos">
+                    <h:outputText value="#{trabajador.persona.NOMPER} #{trabajador.persona.APEPER}"/>
+                </p:column>
+                <p:column headerText="Fecha Inicio">
+                    <h:outputText value="#{trabajador.FECINITRAB}"/>
+                </p:column>
+                <p:column headerText="Fecha Fin">
+                    <h:outputText value="#{trabajador.FECFINTRAB eq null ? 'Laborando' : trabajador.FECFINTRAB}"/>
+                </p:column>
+            </p:dataTable>
+            <p:contextMenu for="tblTrabajador">
+                <p:menuitem value="Modificar" oncomplete="PF('dlgModTrabajador').show();" update=":frmModTrab"/>
+                <p:menuitem value="Eliminar" actionListener="#{trabajadorC.eliminar()}" update="frmTblTrab"/>
+            </p:contextMenu>
+        </h:form>
+        <p:dialog widgetVar="dlgModTrabajador" header="Modificar DAtos Trabajador">
+            <h:form id="frmModTrab">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Persona"/>
+                    <p:selectOneMenu required="true" filter="true" filterMatchMode="contains"
+                                     value="#{trabajadorC.trabajadorSeleccionado.persona.IDPER}">
+                        <f:selectItems value="#{personaC.listaPrsona}" var="persona" 
+                                       itemLabel="#{persona.NOMPER} #{persona.APEPER}" itemValue="#{persona.IDPER}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Sucursal"/>
+                    <p:selectOneMenu filter="true" filterMatchMode="contains" required="true"
+                                     value="#{trabajadorC.trabajadorSeleccionado.sucursal.IDSUC}">
+                        <f:selectItems value="#{sucursalC.listaSucursal}" var="sucursal"
+                                       itemLabel="#{sucursal.NOMSUC} - #{sucursal.DIRSUC}" itemValue="#{sucursal.IDSUC}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Tipo de Trabajador"/>
+                    <p:selectOneRadio value="#{trabajadorC.trabajadorSeleccionado.TIPTRAB}" required="true">
+                        <f:selectItem itemValue="A" itemLabel="Administrador"/>
+                        <f:selectItem itemValue="J" itemLabel="Jefe de Sucursal"/>
+                        <f:selectItem itemValue="V" itemLabel="Vendedor"/>
+                    </p:selectOneRadio>
+                    <p:outputLabel value="Fecha Inicio labores"/>
+                    <p:calendar value="#{trabajadorC.trabajadorSeleccionado.FECINITRAB}" required="true"/>
+                    <p:outputLabel value="Fecha Fin labores"/>
+                    <p:calendar value="#{trabajadorC.trabajadorSeleccionado.FECFINTRAB}" required="true"/>
+                </h:panelGrid>
+                <p:commandButton value="Modificar" actionListener="#{trabajadorC.editar()}" update="frmModTrab :frmTblTrab"
+                                 oncomplete="PF('dlgModTrabajador').hide();"/>
+
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

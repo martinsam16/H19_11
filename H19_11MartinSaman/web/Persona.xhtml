@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Persona</title>
+    </h:head>
+    <h:body>
+        <ui:include src="Menu.xhtml"/>
+        <h:form id="frmRegistrarPersona">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="Nombres"/>
+                <p:inputText value="#{personaC.persona.NOMPER}" required="true" requiredMessage="Ingresar nombres"/>
+                <p:outputLabel value="Apellidos"/>
+                <p:inputText value="#{personaC.persona.APEPER}" required="true" requiredMessage="Ingresar apellidos"/>
+                <p:outputLabel value="DNI"/>
+                <p:inputMask mask="99999999" value="#{personaC.persona.DNIPER}"/>
+                <p:outputLabel value="Dirección"/>
+                <p:inputText value="#{personaC.persona.DIRPER}"/>
+            </h:panelGrid>
+            <p:commandButton value="Guardar" actionListener="#{personaC.registrar()}" update="frmRegistrarPersona :frmDatosPersona"/>
+        </h:form>
+        <h:form id="frmDatosPersona">
+            <p:dataTable id="tblPersona" var="persona" 
+                         selection="#{personaC.personaSeleccionada}"
+                         selectionMode="single"
+                         rowKey="#{persona.IDPER}"
+                         value="#{personaC.listaPrsona}">
+                <p:column headerText="Nombres">
+                    <h:outputText value="#{persona.NOMPER}"/>
+                </p:column>
+                <p:column headerText="Apellidos">
+                    <h:outputText value="#{persona.APEPER}"/>
+                </p:column>
+                <p:column headerText="DNI">
+                    <h:outputText value="#{persona.DNIPER}"/>
+                </p:column>
+                <p:column headerText="Dirección">
+                    <h:outputText value="#{persona.DIRPER}"/>
+                </p:column>
+
+            </p:dataTable>
+            <p:contextMenu for="tblPersona">
+                <p:menuitem value="Modificar" oncomplete="PF('dlgModPersona').show();" update=":frmModPer"/>
+                <p:menuitem value="Eliminar" actionListener="#{personaC.eliminar()}" update="frmDatosPersona"/>
+            </p:contextMenu>
+        </h:form>
+        <p:dialog widgetVar="dlgModPersona">
+            <h:form id="frmModPer">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Nombres"/>
+                    <p:inputText value="#{personaC.personaSeleccionada.NOMPER}" required="true" requiredMessage="Ingresar nombres"/>
+                    <p:outputLabel value="Apellidos"/>
+                    <p:inputText value="#{personaC.personaSeleccionada.APEPER}" required="true" requiredMessage="Ingresar apellidos"/>
+                    <p:outputLabel value="DNI"/>
+                    <p:inputMask mask="99999999" value="#{personaC.personaSeleccionada.DNIPER}"/>
+                    <p:outputLabel value="Dirección"/>
+                    <p:inputText value="#{personaC.personaSeleccionada.DIRPER}"/>
+                </h:panelGrid>
+                <p:commandButton value="Modificar" actionListener="#{personaC.editar()}" 
+                                 update=":frmDatosPersona" oncomplete="PF('dlgModPersona').hide();"/>
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>
+

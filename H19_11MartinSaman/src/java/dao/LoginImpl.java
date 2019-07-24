@@ -11,11 +11,11 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
     @Override
     public void registrar(Login modelo) throws Exception {
         try {
-            String sql = "INSERT INTO LOGIN (IDTRAB, USRLOG, PSSWLOG, TIPLOG) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO LOGIN (IDTRAB, USRLOG, PSSWLOG, TIPLOG) VALUES (?,?,?,?)";
             PreparedStatement ps = this.conectar().prepareStatement(sql);
             ps.setInt(1, modelo.getTrabajador().getIDTRAB());
-            ps.setString(2, modelo.getUSRLOG());
-            ps.setString(3, modelo.getPSSWLOG());
+            ps.setString(2, modelo.getTrabajador().getPersona().getNOMPER().replace(" ", "_"));
+            ps.setString(3, modelo.getTrabajador().getPersona().getAPEPER().replace(" ", "_"));
             ps.setString(4, modelo.getTrabajador().getTIPTRAB());
             ps.executeUpdate();
             ps.clearParameters();
@@ -29,12 +29,35 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
 
     @Override
     public void editar(Login modelo) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            String sql = "UPDATE LOGIN SET TIPLOG=? WHERE IDTRAB=?";
+            PreparedStatement ps = this.conectar().prepareStatement(sql);
+            ps.setString(1, modelo.getTrabajador().getTIPTRAB());
+            ps.setInt(2, modelo.getTrabajador().getIDTRAB());
+            ps.executeUpdate();
+            ps.clearParameters();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            this.desconectar();
+        }
     }
 
     @Override
     public void eliminar(Login modelo) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            String sql = "UPDATE LOGIN SET ESTLOG='I' WHERE IDTRAB=?";
+            PreparedStatement ps = this.conectar().prepareStatement(sql);
+            ps.setInt(1, modelo.getTrabajador().getIDTRAB());
+            ps.executeUpdate();
+            ps.clearParameters();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            this.desconectar();
+        }
     }
 
     @Override
@@ -43,14 +66,12 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
         try {
             String sql = "SELECT IDLOG, TIPLOG, ESTLOG, IDTRAB WHERE USRLOG=? AND PSSWLOG=?";
             ResultSet rs = this.conectar().createStatement().executeQuery(sql);
-            while (rs.next()) {                
+            while (rs.next()) {
                 Trabajador trabajador = new Trabajador();
                 login.setIDLOG(rs.getInt(1));
                 login.setTIPLOG(rs.getString(2));
                 login.setESTLOG(rs.getString(3));
-                
-                
-                
+
             }
         } catch (Exception e) {
         } finally {

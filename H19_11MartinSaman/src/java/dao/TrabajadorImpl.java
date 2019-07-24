@@ -33,12 +33,15 @@ public class TrabajadorImpl extends Conexion implements ICrud<Trabajador> {
     @Override
     public void editar(Trabajador modelo) throws Exception {
         try {
-            System.out.println(modelo.toString());
             String sql = "UPDATE TRABAJADOR SET IDPER=?, FECINITRAB=?, FECFINTRAB=?, TIPTRAB=?, IDSUC=? WHERE IDTRAB=?";
             PreparedStatement ps = this.conectar().prepareStatement(sql);
             ps.setInt(1, modelo.getPersona().getIDPER());
             ps.setDate(2, new Date(modelo.getFECINITRAB().getTime()));
-            ps.setDate(3, new Date(modelo.getFECFINTRAB().getTime()));
+            if (modelo.getFECFINTRAB() == null) {
+                ps.setNull(3, java.sql.Types.DATE);
+            } else {
+                ps.setDate(3, new Date(modelo.getFECFINTRAB().getTime()));
+            }
             ps.setString(4, modelo.getTIPTRAB());
             ps.setInt(5, modelo.getSucursal().getIDSUC());
             ps.setInt(6, modelo.getIDTRAB());

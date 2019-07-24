@@ -11,10 +11,15 @@ public class Conexion {
     public Connection conectar() throws Exception {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//            conexion = DriverManager.getConnection(
+//                    "jdbc:sqlserver://servermartin.database.windows.net;database=CompuTech;",
+//                    "malditoidealismo",
+//                    "Nadieseacuerda12"
+//            );
             conexion = DriverManager.getConnection(
-                    "jdbc:sqlserver://servermartin.database.windows.net;database=CompuTech;",
-                    "malditoidealismo",
-                    "Nadieseacuerda12"
+                    "jdbc:sqlserver://localhost;database=CompuTech;",
+                    "administrador",
+                    "Administrador123"
             );
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();

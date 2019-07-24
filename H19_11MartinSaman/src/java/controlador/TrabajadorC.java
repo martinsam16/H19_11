@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedProperty;
 import modelo.Trabajador;
 
 @Named(value = "trabajadorC")
@@ -16,6 +17,8 @@ public class TrabajadorC implements Serializable {
     Trabajador trabajador, trabajadorSeleccionado;
     TrabajadorImpl daoTrabajador;
     List<Trabajador> listaTrabajador;
+    @ManagedProperty("#{loginC}")
+    LoginC loginC = new LoginC();
 
     public TrabajadorC() {
         trabajador = new Trabajador();
@@ -44,7 +47,8 @@ public class TrabajadorC implements Serializable {
     public void registrar() throws Exception {
         try {
             daoTrabajador.registrar(trabajador);
-            listar();
+            listar();            
+            loginC.registrar(listaTrabajador.get(listaTrabajador.size() - 1));
             trabajador.clear();
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +57,12 @@ public class TrabajadorC implements Serializable {
 
     public void editar() throws Exception {
         try {
+            if (trabajadorSeleccionado.getFECFINTRAB() != null) {
+                eliminar();
+                return;
+            }
             daoTrabajador.editar(trabajadorSeleccionado);
+            loginC.editar(trabajadorSeleccionado);
             listar();
             trabajadorSeleccionado.clear();
         } catch (Exception e) {
@@ -64,6 +73,7 @@ public class TrabajadorC implements Serializable {
     public void eliminar() throws Exception {
         try {
             daoTrabajador.eliminar(trabajadorSeleccionado);
+            loginC.eliminar(trabajadorSeleccionado);
             listar();
             trabajadorSeleccionado.clear();
         } catch (Exception e) {
@@ -93,6 +103,14 @@ public class TrabajadorC implements Serializable {
 
     public void setListaTrabajador(List<Trabajador> listaTrabajador) {
         this.listaTrabajador = listaTrabajador;
+    }
+
+    public LoginC getLoginC() {
+        return loginC;
+    }
+
+    public void setLoginC(LoginC loginC) {
+        this.loginC = loginC;
     }
 
 }

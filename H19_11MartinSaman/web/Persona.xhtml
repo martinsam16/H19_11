@@ -9,7 +9,7 @@
     </h:head>
     <h:body>
         <ui:include src="Menu.xhtml"/>
-        <h:form id="frmRegistrarPersona">
+        <h:form id="frmRegistrarPersona"><p:growl autoUpdate="true"/>
             <h:panelGrid columns="2">
                 <p:outputLabel value="Nombres"/>
                 <p:inputText value="#{personaC.persona.NOMPER}" required="true" requiredMessage="Ingresar nombres"/>
@@ -49,7 +49,7 @@
         </h:form>
         <p:dialog widgetVar="dlgModPersona">
             <h:form id="frmModPer">
-                <h:panelGrid columns="2">
+                <h:panelGrid columns="2"><p:growl autoUpdate="true"/>
                     <p:outputLabel value="Nombres"/>
                     <p:inputText value="#{personaC.personaSeleccionada.NOMPER}" required="true" requiredMessage="Ingresar nombres"/>
                     <p:outputLabel value="Apellidos"/>

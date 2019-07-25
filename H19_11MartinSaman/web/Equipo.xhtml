@@ -9,7 +9,7 @@
     </h:head>
     <h:body>
         <ui:include src="Menu.xhtml"/>
-        <h:form id="frmRegistrarEquipo">
+        <h:form id="frmRegistrarEquipo"><p:growl autoUpdate="true"/>
             <h:panelGrid columns="2">
                 <p:outputLabel value="Nombre"/>
                 <p:inputText value="#{equipoC.equipo.NOMEQ}" required="true" requiredMessage="Ingresar Nombre"/>
@@ -48,7 +48,7 @@
             </p:contextMenu>
         </h:form>
         <p:dialog widgetVar="dlgModEquipo">
-            <h:form id="frmModEq">
+            <h:form id="frmModEq"><p:growl autoUpdate="true"/>
                 <h:panelGrid columns="2">
                     <p:outputLabel value="Nombre"/>
                     <p:inputText value="#{equipoC.equipoSeleccionado.NOMEQ}" required="true" requiredMessage="Ingresar nombres"/>
@@ -57,10 +57,11 @@
                     <p:outputLabel value="Modelo"/>
                     <p:inputText value="#{equipoC.equipoSeleccionado.MODEQ}" required="true" requiredMessage="Ingresar nombres"/>
                     <p:outputLabel value="Precio"/>
-                    <p:spinner value="#{equipoC.equipoSeleccionado.PREEQ}" required="true" requiredMessage="Ingresar apellidos"/>
+                    <p:spinner value="#{equipoC.equipoSeleccionado.PREEQ}" min="1.0" stepFactor="1"
+                               required="true" requiredMessage="Ingresar apellidos"/>
                 </h:panelGrid>
                 <p:commandButton value="Modificar" actionListener="#{equipoC.editar()}" 
-                                 update=":frmDatosEquipo" oncomplete="PF('dlgModEquipo').hide();"/>
+                                 update="frmModEq :frmDatosEquipo" oncomplete="PF('dlgModEquipo').hide();"/>
             </h:form>
         </p:dialog>
 

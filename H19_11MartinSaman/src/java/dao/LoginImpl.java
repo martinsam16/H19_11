@@ -71,9 +71,13 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
                 login.setIDLOG(rs.getInt(1));
                 login.setTIPLOG(rs.getString(2));
                 login.setESTLOG(rs.getString(3));
-
+                trabajador.setIDTRAB(rs.getInt(4));
+                login.setTrabajador(trabajador);
             }
+            rs.clearWarnings();
+            rs.close();
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             this.desconectar();
         }

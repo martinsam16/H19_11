@@ -4,12 +4,17 @@ import java.util.Date;
 
 public class Venta {
 
-    private Login vendedor;
-    private Persona comprador;
+    private Login vendedor = new Login();
+    private Persona comprador = new Persona();
     private int IDVEN;
     private Date FECVEN;
     private String ESTVEN, TIPVEN;
     private float TOTVEN;
+    
+    public void clear(){
+        this.comprador.clear();
+        this.TOTVEN = 0;
+    }
 
     public Login getVendedor() {
         return vendedor;

@@ -1,21 +1,22 @@
 package modelo;
 
+import java.time.Instant;
 import java.util.Date;
 
 public class Inventario {
 
     private Equipo equipo = new Equipo();
-    private Date FECINV;
-    private int IDINV, CNTINV;
-    private String ESTINV, TIPINV;
+    private Date FECINV = Date.from(Instant.now());
+    private int IDINV, CNTINV=1;
+    private String ESTINV, TIPINV = "E";
 
     public void clear() {
         this.equipo = new Equipo();
-        this.FECINV = null;
+        this.FECINV = Date.from(Instant.now());
         this.ESTINV = null;
-        this.TIPINV = null;
+        this.TIPINV = "E";
         this.IDINV = 0;
-        this.CNTINV = 0;
+        this.CNTINV = 1;
     }
 
     public Equipo getEquipo() {

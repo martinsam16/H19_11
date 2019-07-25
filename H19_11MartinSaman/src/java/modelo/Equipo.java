@@ -5,14 +5,33 @@ public class Equipo {
     private int IDEQ;
     private String NOMEQ, MAREQ, MODEQ, ESTEQ;
     private float PREEQ;
-    
-    public void clear(){
+    private int cantidadInventario, cantidadVender = 1;
+
+    public void clear() {
         this.IDEQ = 0;
         this.PREEQ = 0;
+        this.cantidadVender = 1;
+        this.cantidadInventario = 0;
         this.NOMEQ = null;
         this.MAREQ = null;
         this.MODEQ = null;
         this.ESTEQ = null;
+    }
+
+    public int getCantidadInventario() {
+        return cantidadInventario;
+    }
+
+    public void setCantidadInventario(int cantidadInventario) {
+        this.cantidadInventario = cantidadInventario;
+    }
+
+    public int getCantidadVender() {
+        return cantidadVender;
+    }
+
+    public void setCantidadVender(int cantidadVender) {
+        this.cantidadVender = cantidadVender;
     }
 
     public int getIDEQ() {

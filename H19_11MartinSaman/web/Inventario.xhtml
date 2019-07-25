@@ -19,7 +19,8 @@
                                    itemLabel="#{equipo.NOMEQ} - #{equipo.MAREQ} - #{equipo.MODEQ}" itemValue="#{equipo.IDEQ}"/>
                 </p:selectOneMenu>
                 <p:outputLabel value="Cantidad"/>
-                <p:spinner value="#{inventarioC.inventario.CNTINV}" required="true" requiredMessage="Ingresar apellidos"/>
+                <p:spinner value="#{inventarioC.inventario.CNTINV}" min="1" size="10"
+                           required="true" requiredMessage="Ingresar apellidos"/>
                 <p:outputLabel value="Fecha"/>
                 <p:calendar value="#{inventarioC.inventario.FECINV}"/>
             </h:panelGrid>
@@ -28,12 +29,18 @@
         <h:form id="frmDatosInventario">
             <p:dataTable id="tblInventario" var="inventario" 
                          selection="#{inventarioC.inventarioSeleccionado}"
-                         selectionMode="single"
-                         rowKey="#{inventario.IDINV}"
+                         selectionMode="single" sortBy="#{inventario.FECINV}" sortOrder="descending"
+                         rowKey="#{inventario.IDINV}" disabledSelection="#{inventario.TIPINV eq 'S'}"
                          value="#{inventarioC.listaInventario}">
 
-                <p:column headerText="Equipo">
+                <p:column headerText="Nombre equipo">
+                    <h:outputText value="#{inventario.equipo.NOMEQ}"/>
+                </p:column>
+                <p:column headerText="Marca equipo">
                     <h:outputText value="#{inventario.equipo.MAREQ}"/>
+                </p:column>
+                <p:column headerText="Modelo equipo">
+                    <h:outputText value="#{inventario.equipo.MODEQ}"/>
                 </p:column>
                 <p:column headerText="Cantidad">
                     <h:outputText value="#{inventario.CNTINV}"/>
@@ -55,7 +62,7 @@
             <h:form id="frmModInventario">
                 <h:panelGrid columns="2">
                     <p:outputLabel value="Equipo"/>
-                    <p:selectOneMenu required="true" filter="true" filterMatchMode="contains"
+                    <p:selectOneMenu required="true" filter="true" filterMatchMode="contains" disabled="true"
                                      value="#{inventarioC.inventarioSeleccionado.equipo.IDEQ}">
                         <f:selectItems value="#{equipoC.listaEquipo}" var="equipo" 
                                        itemLabel="#{equipo.NOMEQ} - #{equipo.MAREQ} - #{equipo.MODEQ}" itemValue="#{equipo.IDEQ}"/>
@@ -65,7 +72,8 @@
                     <p:outputLabel value="Fecha"/>
                     <p:calendar value="#{inventarioC.inventarioSeleccionado.FECINV}"/>
                 </h:panelGrid>
-                <p:commandButton value="Modificar" actionListener="#{inventarioC.editar()}" update=":frmDatosInventario" oncomplete="PF('dlgModInventario').hide();"/>
+                <p:commandButton value="Modificar" actionListener="#{inventarioC.editar()}"
+                                 update=":frmDatosInventario" oncomplete="PF('dlgModInventario').hide();"/>
             </h:form>
         </p:dialog>
 

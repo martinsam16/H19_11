@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Venta</title>
+    </h:head>
+    <h:body>
+        <ui:include src="Menu.xhtml"/>
+        <h:form id="tbTbls">
+            <p:tabView>
+                <p:tab title="Realizar Venta">
+                    <h:form id="frmDatosEquipo">
+                        <p:dataTable id="tblEquipos"
+                                     value="#{equipoC.listaEquipo}" var="equipo"
+                                     selection="#{ventaC.listaEquipoSeleccionado}"
+                                     rowKey="#{equipo.IDEQ}"
+                                     rows="10" disabledSelection="#{equipo.cantidadInventario>=1?false:true}"
+                                     paginator="true" sortBy="#{equipo.cantidadInventario}" sortOrder="descending"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15,20,30">
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column rowspan="3" style="width:16px;text-align:center"/>
+                                    <p:column colspan="4" headerText="Equipo" />
+                                    <p:column colspan="1" headerText="Inventario" />
+                                    <p:column colspan="1" headerText="Vender" />
+                                </p:row>
+                                <p:row>
+                                    <p:column headerText="Nombre" />
+                                    <p:column headerText="Marca" />
+                                    <p:column headerText="Modelo" />
+                                    <p:column headerText="Precio" />
+                                    <p:column headerText="Cantidad" />
+                                    <p:column headerText="Cantidad" />
+                                </p:row>
+                            </p:columnGroup>
+
+                            <p:column selectionMode="multiple"  style="width:16px;text-align:center;"/>
+                            <p:column>
+                                <h:outputText value="#{equipo.NOMEQ}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{equipo.MAREQ}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{equipo.MODEQ}"/>
+                            </p:column>
+
+                            <p:column>
+                                <h:outputText value="S/. #{equipo.PREEQ}"/>
+                            </p:column>
+                            <p:column style="width:20vh">
+                                <h:outputText value="#{equipo.cantidadInventario}" style="width:20vh"/>
+                            </p:column>
+                            <p:column>
+                                <p:spinner value="#{equipo.cantidadVender}" size="10" 
+                                           rendered="#{equipo.cantidadInventario>=1?true:false}"
+                                           stepFactor="1" max="#{equipo.cantidadInventario}" min="1"/>
+                            </p:column>
+
+
+                            <f:facet name="header">
+                                <p:selectOneMenu value="#{ventaC.venta.comprador.IDPER}" id="smComprador" style="width: 50% !important"
+                                                 panelStyle="width: 50% !important"
+                                                 required="true" filter="true" filterMatchMode="contains">
+                                    <f:selectItems value="#{personaC.listaPrsona}" var="comprador"
+                                                   itemLabel="#{comprador.NOMPER}, #{comprador.APEPER}"
+                                                   itemValue="#{comprador.IDPER}"/>
+                                </p:selectOneMenu>
+
+                            </f:facet>
+
+                            <!--Recordar usar para hacer focus y limpiar xd-->
+                            <p:ajax event="rowSelect" update=":tbTbls tblEquipos"/>
+                            <p:ajax event="rowSelectCheckbox" update=":tbTbls tblEquipos"/>
+                            <p:ajax event="rowUnselectCheckbox" update=":tbTbls tblEquipos"/>
+
+                            <f:facet name="footer">
+                                <p:commandButton update=":tbTbls tblEquipos" process="tblEquipos"
+                                                 id="btnVender" action="#{equipoC.listar()}"
+                                                 actionListener="#{ventaC.registrar()}" value="Vender"/>
+                                <p:commandButton value="Agregar Persona" oncomplete="PF('dlgRegPersona').show();"/>
+                                <p:commandButton update=":tbTbls tblEquipos" id="btnActualizar" value="Actualizar">
+                                    <f:actionListener binding="#{equipoC.listar()}"/>
+                                    <f:actionListener binding="#{personaC.listar()}"/>
+                                    <f:actionListener binding="#{ventaC.listarDetalle()}"/>
+                                </p:commandButton>
+                                <p:blockUI block="tblEquipos" trigger="btnVender,btnActualizar" />
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Ventas Realizadas">
+                    <h:form id="frmDatosVentas">
+                        <p:dataTable id="tblVentas" var="detalle" value="#{ventaC.listaDetalle}"
+                                     rows="10"
+                                     paginator="true" sortBy="#{detalle.venta.FECVEN}" sortOrder="descending"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15,20,30">
+                            <f:facet name="header">
+                                Ventas
+                            </f:facet>
+
+                            <p:column headerText="Sucursal" >
+                                <h:outputText value="#{detalle.venta.vendedor.trabajador.sucursal.NOMSUC}" />
+                            </p:column>
+                            <p:column headerText="Vendedor" >
+                                <h:outputText value="#{detalle.venta.vendedor.trabajador.persona.NOMPER}, 
+                                              #{detalle.venta.vendedor.trabajador.persona.APEPER}" />
+                            </p:column>
+                            <p:column headerText="Comprador" >
+                                <h:outputText value="#{detalle.venta.comprador.NOMPER}, 
+                                              #{detalle.venta.comprador.APEPER}" />
+                            </p:column>
+                            <p:column headerText="Fecha">
+                                <h:outputText value="#{detalle.venta.FECVEN}" />
+                            </p:column>
+                            <p:column headerText="Equipo">
+                                <h:outputText value="#{detalle.equipo.NOMEQ}" />
+                            </p:column>
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{detalle.CNTVEN}" />
+                            </p:column>
+                            <p:column headerText="Total">
+                                <h:outputText value="S/. #{detalle.TODETVEN}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </h:form>
+        <p:dialog widgetVar="dlgRegPersona">
+            <h:form id="frmRegPer">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Nombres"/>
+                    <p:inputText value="#{personaC.persona.NOMPER}" required="true" requiredMessage="Ingresar nombres"/>
+                    <p:outputLabel value="Apellidos"/>
+                    <p:inputText value="#{personaC.persona.APEPER}" required="true" requiredMessage="Ingresar apellidos"/>
+                    <p:outputLabel value="DNI"/>
+                    <p:inputMask mask="99999999" value="#{personaC.persona.DNIPER}"/>
+                    <p:outputLabel value="Dirección"/>
+                    <p:inputText value="#{personaC.persona.DIRPER}"/>
+                </h:panelGrid>
+                <p:commandButton value="Agregar" actionListener="#{personaC.registrar()}" 
+                                 update="frmRegPer :tbTbls" oncomplete="PF('dlgRegPersona').hide();"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

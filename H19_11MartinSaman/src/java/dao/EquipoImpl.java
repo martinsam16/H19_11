@@ -72,7 +72,7 @@ public class EquipoImpl extends Conexion implements ICrud<Equipo> {
     public List<Equipo> listar() throws Exception {
         List<Equipo> listaEquipo = new ArrayList<>();
         try {
-            String sql = "SELECT IDEQ, NOMEQ, PREEQ, MAREQ, MODEQ ,ESTEQ FROM EQUIPO WHERE ESTEQ='A'";
+            String sql = "SELECT IDEQ, NOMEQ, PREEQ, MAREQ, MODEQ ,ESTEQ, CNTINV FROM FT_LISTAR_PRODINV() WHERE ESTEQ='A'";
             ResultSet rs = this.conectar().createStatement().executeQuery(sql);
             while (rs.next()) {
                 Equipo equipo = new Equipo();
@@ -82,6 +82,7 @@ public class EquipoImpl extends Conexion implements ICrud<Equipo> {
                 equipo.setMAREQ(rs.getString(4));
                 equipo.setMODEQ(rs.getString(5));
                 equipo.setESTEQ(rs.getString(6));
+                equipo.setCantidadInventario(rs.getInt(7));
                 listaEquipo.add(equipo);
             }
             rs.clearWarnings();

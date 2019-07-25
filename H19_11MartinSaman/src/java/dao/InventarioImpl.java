@@ -16,7 +16,7 @@ public class InventarioImpl extends Conexion implements ICrud<Inventario> {
             String sql = "INSERT INTO INVENTARIO (FECINV, TIPINV, IDEQ, CNTINV) VALUES (?,?,?,?)";
             PreparedStatement ps = this.conectar().prepareStatement(sql);
             ps.setDate(1, new Date(modelo.getFECINV().getTime()));
-            ps.setString(2, "E");
+            ps.setString(2, modelo.getTIPINV());
             ps.setInt(3, modelo.getEquipo().getIDEQ());
             ps.setInt(4, modelo.getCNTINV());
             ps.executeUpdate();

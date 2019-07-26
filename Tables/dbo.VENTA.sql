@@ -1,7 +1,7 @@
 CREATE TABLE [dbo].[VENTA]
 (
 [IDVEN] [int] NOT NULL IDENTITY(1, 1),
-[FECVEN] [date] NOT NULL,
+[FECVEN] [date] NOT NULL CONSTRAINT [DF_Constraint] DEFAULT (getdate()),
 [ETSVEN] [nchar] (1) COLLATE Modern_Spanish_CI_AS NOT NULL CONSTRAINT [DF_VENTA_ETSVEN] DEFAULT (N'A'),
 [IDLOG] [int] NOT NULL,
 [IDPER] [int] NOT NULL,

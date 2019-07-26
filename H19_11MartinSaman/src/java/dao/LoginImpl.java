@@ -64,8 +64,11 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
     public Login obtenerModelo(Login modelo) throws Exception {
         Login login = new Login();
         try {
-            String sql = "SELECT IDLOG, TIPLOG, ESTLOG, IDTRAB WHERE USRLOG=? AND PSSWLOG=?";
-            ResultSet rs = this.conectar().createStatement().executeQuery(sql);
+            String sql = "SELECT IDLOG, TIPLOG, ESTLOG, IDTRAB FROM LOGIN WHERE USRLOG=? AND PSSWLOG=? AND ESTLOG='A'";
+            PreparedStatement ps = this.conectar().prepareStatement(sql);
+            ps.setString(1, modelo.getUSRLOG());
+            ps.setString(2, modelo.getPSSWLOG());
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Trabajador trabajador = new Trabajador();
                 login.setIDLOG(rs.getInt(1));

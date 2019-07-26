@@ -8,6 +8,7 @@
         <title>Sucursales</title>
     </h:head>
     <h:body>
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
         <ui:include src="Menu.xhtml"/>
         <h:form id="frmRegistrarSucursal"><p:growl autoUpdate="true"/>
             <h:panelGrid columns="2">

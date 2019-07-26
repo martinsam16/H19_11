@@ -5,6 +5,15 @@ public class Login {
     private Trabajador trabajador;
     private int IDLOG;
     private String USRLOG, PSSWLOG, ESTLOG, TIPLOG;
+    
+    public void clear(){
+        this.trabajador = new Trabajador();
+        this.IDLOG = 0;
+        this.USRLOG = null;
+        this.PSSWLOG = null;
+        this.ESTLOG = null;
+        this.TIPLOG = null;
+    }
 
     public Trabajador getTrabajador() {
         return trabajador;

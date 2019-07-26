@@ -18,7 +18,7 @@ public class Conexion {
 //            );
             conexion = DriverManager.getConnection(
                     "jdbc:sqlserver://localhost;database=CompuTech;",
-                    "admin",
+                    "administrador",
                     "Administrador123"
             );
         } catch (ClassNotFoundException | SQLException e) {

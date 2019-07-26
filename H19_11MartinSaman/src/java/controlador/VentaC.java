@@ -11,6 +11,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import modelo.Equipo;
 import modelo.Inventario;
+import modelo.Login;
 import modelo.Venta;
 import modelo.VentaDetalle;
 
@@ -64,9 +65,10 @@ public class VentaC implements Serializable {
         }
     }
 
-    public void registrar() throws Exception {
+    public void registrar(Login login) throws Exception {
         try {
             if (listaEquipoSeleccionado.size() > 0) {
+                venta.setVendedor(login);
                 listaEquipoSeleccionado.forEach((eq) -> {
                     venta.setTOTVEN(
                             venta.getTOTVEN() + (eq.getCantidadVender() * eq.getPREEQ())

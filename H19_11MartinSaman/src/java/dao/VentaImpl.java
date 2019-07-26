@@ -13,7 +13,7 @@ public class VentaImpl extends Conexion implements ICrud<Venta> {
         try {
             String sql = "INSERT INTO VENTA (IDLOG, IDPER, TOTVEN) VALUES (?,?,?)";
             PreparedStatement ps = this.conectar().prepareStatement(sql);
-            ps.setInt(1, 1);
+            ps.setInt(1, modelo.getVendedor().getIDLOG());
             ps.setInt(2, modelo.getComprador().getIDPER());
             ps.setFloat(3, modelo.getTOTVEN());
             ps.executeUpdate();

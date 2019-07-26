@@ -9,6 +9,7 @@
         <title>Venta</title>
     </h:head>
     <h:body>
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
         <ui:include src="Menu.xhtml"/>
         <h:form id="tbTbls">
             <p:tabView>
@@ -82,7 +83,7 @@
                             <f:facet name="footer">
                                 <p:commandButton update=":tbTbls tblEquipos" process="tblEquipos"
                                                  id="btnVender" action="#{equipoC.listar()}"
-                                                 actionListener="#{ventaC.registrar()}" value="Vender"/>
+                                                 actionListener="#{ventaC.registrar(loginC.loginSesion)}" value="Vender"/>
                                 <p:commandButton value="Agregar Persona" oncomplete="PF('dlgRegPersona').show();"/>
                                 <p:commandButton update=":tbTbls tblEquipos" id="btnActualizar" value="Actualizar">
                                     <f:actionListener binding="#{equipoC.listar()}"/>

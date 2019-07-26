@@ -9,6 +9,7 @@
         <title>Equipos Informáticos</title>
     </h:head>
     <h:body>
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
         <ui:include src="Menu.xhtml"/>
         <h:form id="frmRegistrarInventario"><p:growl autoUpdate="true"/>
             <h:panelGrid columns="2">
@@ -22,7 +23,8 @@
                 <p:spinner value="#{inventarioC.inventario.CNTINV}" min="1" size="10"
                            required="true" requiredMessage="Ingresar Cantidad"/>
                 <p:outputLabel value="Fecha"/>
-                <p:calendar value="#{inventarioC.inventario.FECINV}" required="true" requiredMessage="Ingrese Fecha"/>
+                <p:calendar value="#{inventarioC.inventario.FECINV}" required="true" requiredMessage="Ingrese Fecha"
+                            mindate="calwidget.today()" widgetVar="calwidget"/>
             </h:panelGrid>
             <p:commandButton value="Guardar" actionListener="#{inventarioC.registrar()}" update="frmRegistrarInventario :frmDatosInventario"/>
         </h:form>

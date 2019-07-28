@@ -6,16 +6,26 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Dashboard</title>
+        <title>Home</title>
     </h:head>
     <h:body>
-        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
         <ui:include src="Menu.xhtml"/>
-        <h:form id="frmDashboard">
-            
-            <p:chart type="bar" model="#{dashboardC.barVentas}"/>
-            <p:commandButton value="Actualizar" update="frmDashboard" actionListener="#{dashboardC.listar()}"/>
-        </h:form>
+        <ui:fragment rendered="#{loginC.loginSesion.TIPLOG eq 'A' ? true : false}">
+            <h:form id="frmDashboard">
+                <p:chart type="bar" model="#{dashboardC.barVentas}"/>
+                <p:selectOneMenu value="#{dashboardC.idsuc}" id="btnRC" height="200" 
+                                 style="width: 30% !important"
+                                 panelStyle="width: 30% !important"
+                                 filter="true" filterMatchMode="contains">
+                    <f:selectItem itemLabel="Todas" itemValue="#{0}"/>
+                    <f:selectItems value="#{sucursalC.listaSucursal}" var="sucursal"
+                                   itemValue="#{sucursal.IDSUC}" itemLabel="#{sucursal.NOMSUC}"/>
+                    <p:ajax event="change" oncomplete="rc()" listener="#{dashboardC.listar()}"/>
+                </p:selectOneMenu>
+                <p:remoteCommand name="rc" update="frmDashboard"/>
+                <p:blockUI trigger="btnRC" block="frmDashboard"/>
+            </h:form>
+        </ui:fragment>
     </h:body>
 </html>
 

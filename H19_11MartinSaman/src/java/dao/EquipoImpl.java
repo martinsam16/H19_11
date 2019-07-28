@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Equipo;
+import org.primefaces.model.StreamedContent;
 
 public class EquipoImpl extends Conexion implements ICrud<Equipo> {
 
@@ -93,6 +94,11 @@ public class EquipoImpl extends Conexion implements ICrud<Equipo> {
             this.desconectar();
         }
         return listaEquipo;
+    }
+
+    @Override
+    public StreamedContent generarReporte(Equipo modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

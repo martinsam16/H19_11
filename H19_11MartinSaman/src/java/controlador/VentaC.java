@@ -7,13 +7,18 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import modelo.Equipo;
 import modelo.Inventario;
 import modelo.Login;
 import modelo.Venta;
 import modelo.VentaDetalle;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 @Named(value = "ventaC")
 @SessionScoped
@@ -28,6 +33,8 @@ public class VentaC implements Serializable {
     List<Equipo> listaEquipoSeleccionado;
     Inventario inventario;
     InventarioImpl daoInventario;
+    Date fecha1, fecha2;
+    StreamedContent reporte;
 
     public VentaC() {
         daoVenta = new VentaImpl();
@@ -44,7 +51,6 @@ public class VentaC implements Serializable {
     public void onInit() {
         try {
             listarVenta();
-            listarDetalle();
         } catch (Exception e) {
         }
     }
@@ -57,9 +63,10 @@ public class VentaC implements Serializable {
         }
     }
 
-    public void listarDetalle() throws Exception {
+    public void listarDetalle(Login login) throws Exception {
         try {
-            listaDetalle = daoDetalle.listar();
+            listaDetalle = login.getTIPLOG().equals("J") ? daoDetalle.listar(login, fecha1, fecha2)
+                    : login.getTIPLOG().equals("V") ? daoDetalle.listar(login, fecha1) : null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,20 +97,27 @@ public class VentaC implements Serializable {
                         inventario.setEquipo(eq);
                         daoInventario.registrar(inventario);
                         inventario.clear();
-
+                        actualizarReporte();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                listarDetalle();
+                listarDetalle(login);
                 listaEquipoSeleccionado.clear();
+                actualizarReporte();
 //            venta.clear();
 //            detalle.clear();
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Seleccione almenos un producto"));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void actualizarReporte() throws Exception {
+        reporte = daoVenta.generarReporte(venta);
     }
 
     public VentaDetalle getDetalle() {
@@ -152,5 +166,29 @@ public class VentaC implements Serializable {
 
     public void setVenta(Venta venta) {
         this.venta = venta;
+    }
+
+    public Date getFecha1() {
+        return fecha1;
+    }
+
+    public void setFecha1(Date fecha1) {
+        this.fecha1 = fecha1;
+    }
+
+    public Date getFecha2() {
+        return fecha2;
+    }
+
+    public void setFecha2(Date fecha2) {
+        this.fecha2 = fecha2;
+    }
+
+    public StreamedContent getReporte() {
+        return reporte;
+    }
+
+    public void setReporte(StreamedContent reporte) {
+        this.reporte = reporte;
     }
 }

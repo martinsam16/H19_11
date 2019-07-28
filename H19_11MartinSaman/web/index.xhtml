@@ -2,22 +2,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Login - Computech</title>
     </h:head>
     <h:body>
-        <h:form id="frmLogin"><p:growl autoUpdate="true"/>
+        <h:form id="frmLogin"><p:growl/>
             <h:panelGrid columns="2">
                 <p:outputLabel value="Usuario"/>
                 <p:inputText value="#{loginC.loginSesion.USRLOG}" required="true" requiredMessage="Ingrese usuario"/>
                 <p:outputLabel value="Contraseña"/>
-                <p:inputText value="#{loginC.loginSesion.PSSWLOG}" required="true" requiredMessage="Ingrese contraseña"/>
+                <p:password value="#{loginC.loginSesion.PSSWLOG}" 
+                            required="true" requiredMessage="Ingrese contraseña"/>
             </h:panelGrid>
             <p:commandButton actionListener="#{loginC.iniciarSesion()}" value="Ingresar"
                              update="frmLogin" />
         </h:form>
+        <br />
     </h:body>
 </html>
 

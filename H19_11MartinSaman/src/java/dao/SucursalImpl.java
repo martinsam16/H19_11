@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Sucursal;
+import org.primefaces.model.StreamedContent;
 
 public class SucursalImpl extends Conexion implements ICrud<Sucursal> {
 
@@ -86,6 +87,11 @@ public class SucursalImpl extends Conexion implements ICrud<Sucursal> {
             this.desconectar();
         }
         return listaSucursal;
+    }
+
+    @Override
+    public StreamedContent generarReporte(Sucursal modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

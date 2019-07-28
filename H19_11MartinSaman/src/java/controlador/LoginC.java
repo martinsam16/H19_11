@@ -25,17 +25,21 @@ public class LoginC implements Serializable {
     public void iniciarSesion() throws Exception {
         try {
             loginSesion = daoLogin.obtenerModelo(loginSesion);
-            if (loginSesion.getIDLOG() > 0 ) {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/H19_11MartinSaman/faces/Home.xhtml");
-            }else{
+            if (loginSesion.getIDLOG() > 0) {
+                if (loginSesion.getTIPLOG().equals("V")) {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/H19_11MartinSaman/faces/Venta.xhtml");
+                } else {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/H19_11MartinSaman/faces/Home.xhtml");
+                }
+            } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error credenciales"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    public void cerrarSesion() throws Exception{
+
+    public void cerrarSesion() throws Exception {
         try {
             loginSesion.clear();
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().clear();
@@ -48,7 +52,7 @@ public class LoginC implements Serializable {
     public void seguridadSesion() {
         try {
             if (loginSesion.getIDLOG() == 0) {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/H19_11MartinSaman/faces/login.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/H19_11MartinSaman");
             }
         } catch (Exception e) {
             e.printStackTrace();

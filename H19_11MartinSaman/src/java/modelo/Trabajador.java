@@ -8,7 +8,7 @@ public class Trabajador {
     private Persona persona = new Persona();
     private int IDTRAB;
     private Date FECINITRAB, FECFINTRAB;
-    private String ESTTRAB, TIPTRAB;
+    private String ESTTRAB, TIPTRAB="V";
 
     @Override
     public String toString() {
@@ -23,7 +23,7 @@ public class Trabajador {
         this.FECINITRAB = null;
         this.FECFINTRAB = null;
         this.ESTTRAB = null;
-        this.TIPTRAB = null;
+        this.TIPTRAB = "V";
     }
 
     public Sucursal getSucursal() {

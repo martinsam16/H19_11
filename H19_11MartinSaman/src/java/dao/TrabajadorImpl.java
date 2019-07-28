@@ -8,6 +8,7 @@ import java.util.List;
 import modelo.Persona;
 import modelo.Sucursal;
 import modelo.Trabajador;
+import org.primefaces.model.StreamedContent;
 
 public class TrabajadorImpl extends Conexion implements ICrud<Trabajador> {
 
@@ -117,6 +118,11 @@ public class TrabajadorImpl extends Conexion implements ICrud<Trabajador> {
             this.desconectar();
         }
         return listaTrabajadores;
+    }
+
+    @Override
+    public StreamedContent generarReporte(Trabajador modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

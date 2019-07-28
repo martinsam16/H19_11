@@ -9,12 +9,12 @@
         <title>Venta</title>
     </h:head>
     <h:body>
-        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
         <ui:include src="Menu.xhtml"/>
+
         <h:form id="tbTbls">
-            <p:tabView>
-                <p:tab title="Realizar Venta">
-                    <h:form id="frmDatosEquipo">
+            <p:tabView id="tbView">
+                <p:tab title="Realizar Venta" rendered="#{loginC.loginSesion.TIPLOG eq 'J' ? false:true}" id="tbEquipo">
+                    <h:form id="frmDatosEquipo"><p:growl autoUpdate="true"/>
                         <p:dataTable id="tblEquipos"
                                      value="#{equipoC.listaEquipo}" var="equipo"
                                      selection="#{ventaC.listaEquipoSeleccionado}"
@@ -22,7 +22,7 @@
                                      rows="10" disabledSelection="#{equipo.cantidadInventario>=1?false:true}"
                                      paginator="true" sortBy="#{equipo.cantidadInventario}" sortOrder="descending"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                     rowsPerPageTemplate="5,10,15,20,30">
+                                     rowsPerPageTemplate="5,10,15,20,30"><p:growl autoUpdate="true"/>
                             <p:columnGroup type="header">
                                 <p:row>
                                     <p:column rowspan="3" style="width:16px;text-align:center"/>
@@ -76,24 +76,24 @@
                             </f:facet>
 
                             <!--Recordar usar para hacer focus y limpiar xd-->
-                            <p:ajax event="rowSelect" update=":tbTbls tblEquipos"/>
-                            <p:ajax event="rowSelectCheckbox" update=":tbTbls tblEquipos"/>
-                            <p:ajax event="rowUnselectCheckbox" update=":tbTbls tblEquipos"/>
+                            <p:ajax event="rowSelect" update="tblEquipos"/>
+                            <p:ajax event="rowSelectCheckbox" update="tblEquipos"/>
+                            <p:ajax event="rowUnselectCheckbox" update="tblEquipos"/>
 
                             <f:facet name="footer">
-                                <p:commandButton update=":tbTbls tblEquipos" process="tblEquipos"
+                                <p:commandButton update="tblEquipos :frmReporte" process="tblEquipos"
                                                  id="btnVender" action="#{equipoC.listar()}"
                                                  actionListener="#{ventaC.registrar(loginC.loginSesion)}" value="Vender"/>
                                 <p:commandButton value="Agregar Persona" oncomplete="PF('dlgRegPersona').show();"/>
-                                <p:commandButton update=":tbTbls tblEquipos" id="btnActualizar" value="Actualizar">
+                                <p:commandButton update="tblEquipos" id="btnActualizar" value="Actualizar">
                                     <f:actionListener binding="#{equipoC.listar()}"/>
                                     <f:actionListener binding="#{personaC.listar()}"/>
-                                    <f:actionListener binding="#{ventaC.listarDetalle()}"/>
                                 </p:commandButton>
                                 <p:blockUI block="tblEquipos" trigger="btnVender,btnActualizar" />
                             </f:facet>
                         </p:dataTable>
                     </h:form>
+
                 </p:tab>
                 <p:tab title="Ventas Realizadas">
                     <h:form id="frmDatosVentas">
@@ -102,8 +102,27 @@
                                      paginator="true" sortBy="#{detalle.venta.FECVEN}" sortOrder="descending"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      rowsPerPageTemplate="5,10,15,20,30">
+                            <p:growl autoUpdate="true"/>
                             <f:facet name="header">
-                                Ventas
+                                <ui:fragment rendered="#{loginC.loginSesion.TIPLOG eq 'V' ? true : false}">
+                                    <p:calendar value="#{ventaC.fecha1}" required="true" effect="fold"
+                                                requiredMessage="Ingrese fecha"
+                                                navigator="true" readonlyInput="true">
+                                        <p:ajax event="dateSelect" listener="#{ventaC.listarDetalle(loginC.loginSesion)}" update="tblVentas"/>
+                                    </p:calendar>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{loginC.loginSesion.TIPLOG eq 'J' ? true : false}">
+                                    <p:calendar value="#{ventaC.fecha1}" required="true" requiredMessage="Ingrese primera fecha" effect="fold"
+                                                navigator="true" readonlyInput="true">
+                                        <p:ajax event="dateSelect" update="tblVentas"/>
+                                    </p:calendar>
+                                    <p:calendar value="#{ventaC.fecha2}" mindate="#{ventaC.fecha1}" required="true" effect="fold"
+                                                requiredMessage="Ingrese segunda fecha"
+                                                navigator="true" readonlyInput="true">
+                                        <p:ajax event="dateSelect" listener="#{ventaC.listarDetalle(loginC.loginSesion)}" update="tblVentas"/>
+                                    </p:calendar>
+                                </ui:fragment>
+
                             </f:facet>
 
                             <p:column headerText="Sucursal" >
@@ -122,6 +141,9 @@
                             </p:column>
                             <p:column headerText="Equipo">
                                 <h:outputText value="#{detalle.equipo.NOMEQ}" />
+                            </p:column>
+                            <p:column headerText="Precio">
+                                <h:outputText value="#{detalle.equipo.PREEQ}" />
                             </p:column>
                             <p:column headerText="Cantidad">
                                 <h:outputText value="#{detalle.CNTVEN}" />
@@ -150,6 +172,9 @@
                                  update="frmRegPer :tbTbls" oncomplete="PF('dlgRegPersona').hide();"/>
             </h:form>
         </p:dialog>
+        <h:form id="frmReporte">
+            <p:media  value="#{ventaC.reporte}" width="100%" height="100%" cache="false" player="pdf" />
+        </h:form>
     </h:body>
 </html>
 

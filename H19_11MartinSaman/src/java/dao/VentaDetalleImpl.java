@@ -3,6 +3,7 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import modelo.Equipo;
 import modelo.Login;
@@ -11,9 +12,10 @@ import modelo.Sucursal;
 import modelo.Trabajador;
 import modelo.Venta;
 import modelo.VentaDetalle;
+import org.primefaces.model.StreamedContent;
 
 public class VentaDetalleImpl extends Conexion implements ICrud<VentaDetalle> {
-    
+
     @Override
     public void registrar(VentaDetalle modelo) throws Exception {
         try {
@@ -32,48 +34,49 @@ public class VentaDetalleImpl extends Conexion implements ICrud<VentaDetalle> {
             this.desconectar();
         }
     }
-    
+
     @Override
     public void editar(VentaDetalle modelo) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void eliminar(VentaDetalle modelo) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public VentaDetalle obtenerModelo(VentaDetalle modelo) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public List<VentaDetalle> listar() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<VentaDetalle> listar(Login loginSesion, Date... fechas) throws Exception {
         List<VentaDetalle> lista = new ArrayList<>();
         try {
-            String sql = "SELECT venta.IDVEN, venta.FECVEN, venta.ETSVEN, venta.TOTVEN, \n"
-                    + "	comprador.IDPER, comprador.NOMPER, comprador.APEPER, \n"
-                    + "	vendedor.IDPER, vendedor.NOMPER, vendedor.APEPER, \n"
-                    + "	sucursal.IDSUC, sucursal.NOMSUC, \n"
-                    + "	eq.IDEQ, eq.NOMEQ, eq.MAREQ, eq.MODEQ, \n"
-                    + "	detalle.IDVENDET,detalle.CNTVEN, detalle.TOTVENDET \n"
-                    + "FROM VENTA venta \n"
-                    + "INNER JOIN VENTA_DETALLE detalle \n"
-                    + "ON venta.IDVEN = detalle.IDVEN \n"
-                    + "INNER JOIN PERSONA comprador \n"
-                    + "ON venta.IDPER = comprador.IDPER \n"
-                    + "INNER JOIN LOGIN login \n"
-                    + "ON venta.IDLOG = login.IDLOG \n"
-                    + "INNER JOIN TRABAJADOR empleado \n"
-                    + "ON login.IDTRAB = empleado.IDTRAB \n"
-                    + "INNER JOIN SUCURSAL sucursal \n"
-                    + "ON empleado.IDSUC = sucursal.IDSUC \n"
-                    + "INNER JOIN PERSONA vendedor \n"
-                    + "ON empleado.IDPER = vendedor.IDPER \n"
-                    + "INNER JOIN EQUIPO eq \n"
-                    + "ON detalle.IDEQ = eq.IDEQ "
-                    + "ORDER BY venta.IDVEN DESC";
+            String adicional = null;
+            List<Date> listaFechas = new ArrayList<>();
+            for (Date date : fechas) {
+                if (date != null) {
+                    listaFechas.add(date);
+                }
+            }
+            String sql = "SELECT idven, fecven, estven, totven, "
+                    + "	idComprador, nomComprador, apeComprador, "
+                    + "	idVendedor, nomVendedor, apeVendedor, "
+                    + "	idsuc, nomsuc, "
+                    + "	ideq, nomeq, mareq, modeq, preeq, "
+                    + "	detId, detalleCntV, detalleTotVen "
+                    + "FROM VW_VENTAS WHERE "
+                            .concat(listaFechas.size() == 1 ? "fecven = '" + new java.sql.Date(listaFechas.get(0).getTime()) + "'"
+                                    : listaFechas.size() == 2 ? "fecven >= '" + new java.sql.Date(listaFechas.get(0).getTime()) + "'"
+                                    + " AND fecven <= '" + new java.sql.Date(listaFechas.get(1).getTime()) + "'" : "")
+                    + " AND idsuc = " + loginSesion.getTrabajador().getSucursal().getIDSUC()
+                    + " ORDER BY idven DESC";
             ResultSet rs = this.conectar().createStatement().executeQuery(sql);
             while (rs.next()) {
                 Venta venta = new Venta();
@@ -84,40 +87,41 @@ public class VentaDetalleImpl extends Conexion implements ICrud<VentaDetalle> {
                 Equipo equipo = new Equipo();
                 Login login = new Login();
                 Trabajador empleado = new Trabajador();
-                
+
                 venta.setIDVEN(rs.getInt(1));
                 venta.setFECVEN(rs.getDate(2));
                 venta.setESTVEN(rs.getString(3));
                 venta.setTOTVEN(rs.getFloat(4));
-                
+
                 comprador.setIDPER(rs.getInt(5));
                 comprador.setNOMPER(rs.getString(6));
                 comprador.setAPEPER(rs.getString(7));
-                
+
                 vendedor.setIDPER(rs.getInt(8));
                 vendedor.setNOMPER(rs.getString(9));
                 vendedor.setAPEPER(rs.getString(10));
-                
+
                 sucursal.setIDSUC(rs.getInt(11));
                 sucursal.setNOMSUC(rs.getString(12));
-                
+
                 equipo.setIDEQ(rs.getInt(13));
                 equipo.setNOMEQ(rs.getString(14));
                 equipo.setMAREQ(rs.getString(15));
                 equipo.setMODEQ(rs.getString(16));
-                
-                detalle.setIDVENDET(rs.getInt(17));
-                detalle.setCNTVEN(rs.getInt(18));
-                detalle.setTODETVEN(rs.getFloat(19));
-                
+                equipo.setPREEQ(rs.getFloat(17));
+
+                detalle.setIDVENDET(rs.getInt(18));
+                detalle.setCNTVEN(rs.getInt(19));
+                detalle.setTODETVEN(rs.getFloat(20));
+
                 empleado.setPersona(vendedor);
                 empleado.setSucursal(sucursal);
                 login.setTrabajador(empleado);
                 venta.setVendedor(login);
                 venta.setComprador(comprador);
-                
+
                 detalle.setEquipo(equipo);
-                
+
                 detalle.setVenta(venta);
                 lista.add(detalle);
             }
@@ -130,5 +134,10 @@ public class VentaDetalleImpl extends Conexion implements ICrud<VentaDetalle> {
         }
         return lista;
     }
-    
+
+    @Override
+    public StreamedContent generarReporte(VentaDetalle modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

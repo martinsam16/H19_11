@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedProperty;
+import modelo.Login;
 import modelo.Trabajador;
 
 @Named(value = "trabajadorC")
@@ -44,8 +45,11 @@ public class TrabajadorC implements Serializable {
         }
     }
 
-    public void registrar() throws Exception {
+    public void registrar(Login login) throws Exception {
         try {
+            if (login.getTIPLOG().equals("J")) {
+                trabajador.setSucursal(login.getTrabajador().getSucursal());
+            }
             daoTrabajador.registrar(trabajador);
             listar();            
             loginC.registrar(listaTrabajador.get(listaTrabajador.size() - 1));

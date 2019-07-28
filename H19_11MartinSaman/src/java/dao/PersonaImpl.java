@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Persona;
+import org.primefaces.model.StreamedContent;
 
 public class PersonaImpl extends Conexion implements ICrud<Persona> {
 
@@ -92,6 +93,11 @@ public class PersonaImpl extends Conexion implements ICrud<Persona> {
         } finally {
             this.desconectar();
         }
+    }
+
+    @Override
+    public StreamedContent generarReporte(Persona modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

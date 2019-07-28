@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import modelo.Equipo;
 import modelo.Inventario;
+import org.primefaces.model.StreamedContent;
 
 public class InventarioImpl extends Conexion implements ICrud<Inventario> {
 
@@ -102,6 +103,11 @@ public class InventarioImpl extends Conexion implements ICrud<Inventario> {
             this.desconectar();
         }
         return listaInventario;
+    }
+
+    @Override
+    public StreamedContent generarReporte(Inventario modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

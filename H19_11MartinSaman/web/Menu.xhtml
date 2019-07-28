@@ -3,24 +3,54 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:form>
-        <p:menubar>
-            <p:submenu label="Mantenimiento">
-                <p:menuitem value="Personas" action="Persona" />
-                <p:menuitem value="Sucursales" action="Sucursal" />
-                <p:menuitem value="Equipos Informáticos" action="Equipo" />
-            </p:submenu>
-            <p:submenu label="Transaccionales">
-                <p:menuitem value="Venta" action="Venta" />
-                <p:menuitem value="Trabajadores" action="Trabajador" />
-                <p:menuitem value="Inventario" action="Inventario" />
-            </p:submenu>
-            <p:menuitem value="Dashboard" action="Home" />
-            <f:facet name="options">
-                <p:commandButton value="Cerrar Sesión" actionListener="#{loginC.cerrarSesion()}" />
-            </f:facet>
-        </p:menubar>
-    </h:form>
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
+    <ui:fragment rendered="#{loginC.loginSesion.TIPLOG eq 'A' ? true : false}">
+        <h:form>
+            <p:menubar>
+                <p:submenu label="Mantenimiento">
+                    <p:menuitem value="Personas" action="Persona" />
+                    <p:menuitem value="Sucursales" action="Sucursal" />
+                    <p:menuitem value="Equipos Informáticos" action="Equipo" />
+                </p:submenu>
+                <p:submenu label="Transaccionales">
+                    <p:menuitem value="Trabajadores" action="Trabajador" />
+                    <p:menuitem value="Inventario" action="Inventario" />
+                </p:submenu>
+                <p:menuitem value="Dashboard" action="Home" />
+                <f:facet name="options">
+                    <p:commandButton value="Cerrar Sesión" actionListener="#{loginC.cerrarSesion()}" />
+                </f:facet>
+            </p:menubar>
+        </h:form>
+    </ui:fragment>
+    <ui:fragment rendered="#{loginC.loginSesion.TIPLOG eq 'J' ? true : false}">
+        <h:form>
+            <p:menubar>
+                <p:submenu label="Mantenimiento">
+                    <p:menuitem value="Personas" action="Persona" />
+                    <p:menuitem value="Equipos Informáticos" action="Equipo" />
+                </p:submenu>
+                <p:submenu label="Transaccionales">
+                    <p:menuitem value="Venta" action="Venta" />
+                    <p:menuitem value="Trabajadores" action="Trabajador" />
+                    <p:menuitem value="Inventario" action="Inventario" />
+                </p:submenu>
+                <f:facet name="options">
+                    <p:commandButton value="Cerrar Sesión" actionListener="#{loginC.cerrarSesion()}" />
+                </f:facet>
+            </p:menubar>
+        </h:form>
+    </ui:fragment>
+    <ui:fragment rendered="#{loginC.loginSesion.TIPLOG eq 'V' ? true : false}">
+        <h:form>
+            <p:menubar>
+                <f:facet name="options">
+                    <p:commandButton value="Cerrar Sesión" actionListener="#{loginC.cerrarSesion()}" />
+                </f:facet>
+            </p:menubar>
+        </h:form>
+    </ui:fragment>
 </html>
 

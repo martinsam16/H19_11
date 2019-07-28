@@ -8,7 +8,7 @@ SELECT venta.IDVEN as idven, venta.FECVEN as fecven, venta.ETSVEN as estven, ven
 	comprador.IDPER as idComprador, comprador.NOMPER as nomComprador, comprador.APEPER as apeComprador, 
 	vendedor.IDPER as idVendedor, vendedor.NOMPER as nomVendedor, vendedor.APEPER as apeVendedor, 
 	sucursal.IDSUC as idsuc, sucursal.NOMSUC as nomsuc, 
-	eq.IDEQ as ideq, eq.NOMEQ as nomeq, eq.MAREQ as mareq, eq.MODEQ as modeq, 
+	eq.IDEQ as ideq, eq.NOMEQ as nomeq, eq.MAREQ as mareq, eq.MODEQ as modeq, eq.PREEQ as preeq,
 	detalle.IDVENDET as detId, detalle.CNTVEN as detalleCntV, detalle.TOTVENDET as detalleTotVen
 FROM VENTA venta 
 INNER JOIN VENTA_DETALLE detalle 

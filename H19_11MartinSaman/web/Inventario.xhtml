@@ -6,7 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Equipos Informáticos</title>
+        <title>Inventario - Computech</title>
     </h:head>
     <h:body>
         <ui:include src="Menu.xhtml"/>
@@ -22,7 +22,7 @@
                 <p:spinner value="#{inventarioC.inventario.CNTINV}" min="1" size="10"
                            required="true" requiredMessage="Ingresar Cantidad"/>
                 <p:outputLabel value="Fecha"/>
-                <p:calendar value="#{inventarioC.inventario.FECINV}" required="true" requiredMessage="Ingrese Fecha"
+                <p:calendar value="#{inventarioC.inventario.FECINV}" required="true" requiredMessage="Ingrese Fecha" mask="99/99/9999"
                             mindate="calwidget.today()" widgetVar="calwidget"/>
             </h:panelGrid>
             <p:commandButton value="Guardar" actionListener="#{inventarioC.registrar()}" update="frmRegistrarInventario :frmDatosInventario"/>
@@ -50,7 +50,9 @@
                     <h:outputText value="#{inventario.TIPINV eq 'E'? 'Entrada':'Salida'}"/>
                 </p:column>
                 <p:column headerText="Fecha">
-                    <h:outputText value="#{inventario.FECINV}"/>
+                    <h:outputText value="#{inventario.FECINV}">
+                        <f:convertDateTime pattern="dd/MMM/yyyy" />
+                    </h:outputText>
                 </p:column>
 
             </p:dataTable>
@@ -71,7 +73,8 @@
                     <p:outputLabel value="Cantidad"/>
                     <p:spinner value="#{inventarioC.inventarioSeleccionado.CNTINV}" required="true" requiredMessage="Ingrese cantidad"/>
                     <p:outputLabel value="Fecha"/>
-                    <p:calendar value="#{inventarioC.inventarioSeleccionado.FECINV}" required="true" requiredMessage="Ingrese fecha"/>
+                    <p:calendar value="#{inventarioC.inventarioSeleccionado.FECINV}" required="true" requiredMessage="Ingrese fecha" 
+                                mindate="#{inventarioC.inventarioSeleccionado.FECINV}" mask="99/99/9999"/>
                 </h:panelGrid>
                 <p:commandButton value="Modificar" actionListener="#{inventarioC.editar()}"
                                  update=":frmDatosInventario" oncomplete="PF('dlgModInventario').hide();"/>

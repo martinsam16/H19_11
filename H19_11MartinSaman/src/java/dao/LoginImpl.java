@@ -16,8 +16,8 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
             String sql = "INSERT INTO LOGIN (IDTRAB, USRLOG, PSSWLOG, TIPLOG) VALUES (?,?,?,?)";
             PreparedStatement ps = this.conectar().prepareStatement(sql);
             ps.setInt(1, modelo.getTrabajador().getIDTRAB());
-            ps.setString(2, modelo.getTrabajador().getPersona().getNOMPER().replace(" ", "."));
-            ps.setString(3, modelo.getTrabajador().getPersona().getAPEPER().replace(" ", "."));
+            ps.setString(2, modelo.getTrabajador().getPersona().getNOMPER().trim().replace(" ", ".").toLowerCase());
+            ps.setString(3, modelo.getTrabajador().getPersona().getAPEPER().trim().replace(" ", ".").toLowerCase());
             ps.setString(4, modelo.getTrabajador().getTIPTRAB());
             ps.executeUpdate();
             ps.clearParameters();

@@ -72,16 +72,28 @@ public class VentaC implements Serializable {
         }
     }
 
-    public void registrar(Login login) throws Exception {
+    public void calcularVenta() throws Exception {
         try {
+            venta.setTOTVEN(0);
             if (listaEquipoSeleccionado.size() > 0) {
-                venta.setVendedor(login);
                 listaEquipoSeleccionado.forEach((eq) -> {
                     venta.setTOTVEN(
                             venta.getTOTVEN() + (eq.getCantidadVender() * eq.getPREEQ())
                     );
                 });
+            } else {
+                listaEquipoSeleccionado.clear();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void registrar(Login login) throws Exception {
+        try {
+            if (listaEquipoSeleccionado.size() > 0) {
+                venta.setVendedor(login);
+                calcularVenta();
                 daoVenta.registrar(venta);
                 listarVenta();
                 venta.setIDVEN(listaVenta.get(listaVenta.size() - 1).getIDVEN());
@@ -105,6 +117,7 @@ public class VentaC implements Serializable {
                 listarDetalle(login);
                 listaEquipoSeleccionado.clear();
                 actualizarReporte();
+                calcularVenta();
 //            venta.clear();
 //            detalle.clear();
             } else {

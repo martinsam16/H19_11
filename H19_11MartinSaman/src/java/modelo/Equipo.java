@@ -4,12 +4,12 @@ public class Equipo {
 
     private int IDEQ;
     private String NOMEQ, MAREQ, MODEQ, ESTEQ;
-    private float PREEQ;
+    private float PREEQ = (float) 0.1;
     private int cantidadInventario, cantidadVender = 1;
 
     public void clear() {
         this.IDEQ = 0;
-        this.PREEQ = 0;
+        this.PREEQ = (float) 0.1;
         this.cantidadVender = 1;
         this.cantidadInventario = 0;
         this.NOMEQ = null;

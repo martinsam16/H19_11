@@ -23,10 +23,10 @@ public class PersonaImpl extends Conexion implements ICrud<Persona> {
             while (rs.next()) {
                 Persona persona = new Persona();
                 persona.setIDPER(rs.getInt(1));
-                persona.setNOMPER(rs.getString(2));
-                persona.setAPEPER(rs.getString(3));
+                persona.setNOMPER(rs.getString(2).trim());
+                persona.setAPEPER(rs.getString(3).trim());
                 persona.setDNIPER(rs.getString(4));
-                persona.setDIRPER(rs.getString(5));
+                persona.setDIRPER(rs.getString(5).trim());
                 persona.setESTPER(rs.getString(6));
                 listaPersona.add(persona);
             }

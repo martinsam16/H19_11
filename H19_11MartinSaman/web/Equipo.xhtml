@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
-        <title>Equipos Informáticos</title>
+        <title>Equipos Informáticos - Computech</title>
     </h:head>
     <h:body>
         <ui:include src="Menu.xhtml"/>
@@ -18,7 +18,7 @@
                 <p:outputLabel value="Modelo"/>
                 <p:inputText value="#{equipoC.equipo.MODEQ}" required="true" requiredMessage="Ingresar Modelo"/>
                 <p:outputLabel value="Precio"/>
-                <p:spinner value="#{equipoC.equipo.PREEQ}" required="true" requiredMessage="Ingresar Precio" min="1"/>
+                <p:spinner value="#{equipoC.equipo.PREEQ}" required="true" requiredMessage="Ingresar Precio" min="0.1" stepFactor="0.1" prefix="S/."/>
             </h:panelGrid>
             <p:commandButton value="Guardar" actionListener="#{equipoC.registrar()}" update="frmRegistrarEquipo :frmDatosEquipo"/>
         </h:form>
@@ -57,7 +57,7 @@
                     <p:outputLabel value="Modelo"/>
                     <p:inputText value="#{equipoC.equipoSeleccionado.MODEQ}" required="true" requiredMessage="Ingresar nombres"/>
                     <p:outputLabel value="Precio"/>
-                    <p:spinner value="#{equipoC.equipoSeleccionado.PREEQ}" min="1.0" stepFactor="1"
+                    <p:spinner value="#{equipoC.equipoSeleccionado.PREEQ}" min="0.1" stepFactor="0.1" prefix="S/."
                                required="true" requiredMessage="Ingresar apellidos"/>
                 </h:panelGrid>
                 <p:commandButton value="Modificar" actionListener="#{equipoC.editar()}" 

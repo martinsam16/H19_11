@@ -15,10 +15,10 @@
                 <p:password value="#{loginC.loginSesion.PSSWLOG}" 
                             required="true" requiredMessage="Ingrese contraseña"/>
             </h:panelGrid>
-            <p:commandButton actionListener="#{loginC.iniciarSesion()}" value="Ingresar"
+            <p:commandButton actionListener="#{loginC.iniciarSesion()}" value="Ingresar" id="btnIngresar"
                              update="frmLogin" />
+            <p:blockUI trigger="btnIngresar" block="frmLogin"/>
         </h:form>
-        <br />
     </h:body>
 </html>
 

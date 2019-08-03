@@ -1,9 +1,46 @@
 package modelo;
 
+import java.util.Objects;
+
 public class Persona {
 
     private int IDPER;
     private String NOMPER, APEPER, DNIPER, DIRPER, ESTPER;
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        // Si ambos tienen dni comparo por eso, sino por nombres y apellidos
+        final Persona other = (Persona) obj;
+        if (this.DNIPER.isEmpty()) {
+            if (!Objects.equals(this.NOMPER, other.NOMPER)) {
+                return false;
+            }
+            if (!Objects.equals(this.APEPER, other.APEPER)) {
+                return false;
+            }
+        } else {
+            if (!Objects.equals(this.DNIPER, other.DNIPER)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public void clear() {
         this.IDPER = 0;

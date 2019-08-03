@@ -14,8 +14,8 @@ public class SucursalImpl extends Conexion implements ICrud<Sucursal> {
         try {
             String sql = "INSERT INTO SUCURSAL (NOMSUC, DIRSUC) VALUES (?,?)";
             PreparedStatement ps = this.conectar().prepareStatement(sql);
-            ps.setString(1, modelo.getNOMSUC());
-            ps.setString(2, modelo.getDIRSUC());
+            ps.setString(1, modelo.getNOMSUC().trim());
+            ps.setString(2, modelo.getDIRSUC().trim());
             ps.executeUpdate();
             ps.clearParameters();
             ps.close();
@@ -47,7 +47,7 @@ public class SucursalImpl extends Conexion implements ICrud<Sucursal> {
     @Override
     public void eliminar(Sucursal modelo) throws Exception {
         try {
-            String sql = "UPDATE SUCURSAL SET ESTPER='I' WHERE IDSUC=?";
+            String sql = "UPDATE SUCURSAL SET ESTSUC='I' WHERE IDSUC=?";
             PreparedStatement ps = this.conectar().prepareStatement(sql);
             ps.setInt(1, modelo.getIDSUC());
             ps.executeUpdate();
@@ -92,6 +92,16 @@ public class SucursalImpl extends Conexion implements ICrud<Sucursal> {
     @Override
     public StreamedContent generarReporte(Sucursal modelo) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean existe(Sucursal modelo, List<Sucursal> listaModelo) {
+        for (Sucursal sucursal : listaModelo) {
+            if (modelo.equals(sucursal)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

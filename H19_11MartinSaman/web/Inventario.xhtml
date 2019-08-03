@@ -25,22 +25,29 @@
                 <p:calendar value="#{inventarioC.inventario.FECINV}" required="true" requiredMessage="Ingrese Fecha" mask="99/99/9999"
                             mindate="calwidget.today()" widgetVar="calwidget"/>
             </h:panelGrid>
-            <p:commandButton value="Guardar" actionListener="#{inventarioC.registrar()}" update="frmRegistrarInventario :frmDatosInventario"/>
+            <p:commandButton value="Guardar" actionListener="#{inventarioC.registrar()}" oncomplete="PF('wvTblInventario').filter()"
+                             update="frmRegistrarInventario :frmDatosInventario"/>
         </h:form>
         <h:form id="frmDatosInventario">
-            <p:dataTable id="tblInventario" var="inventario" 
+            <p:dataTable id="tblInventario" var="inventario" widgetVar="wvTblInventario"
                          selection="#{inventarioC.inventarioSeleccionado}"
                          selectionMode="single" sortBy="#{inventario.FECINV}" sortOrder="descending"
                          rowKey="#{inventario.IDINV}" disabledSelection="#{inventario.TIPINV eq 'S'}"
-                         value="#{inventarioC.listaInventario}">
-
-                <p:column headerText="Nombre equipo">
+                         value="#{inventarioC.listaInventario}"
+                         filteredValue="#{inventarioC.listaInventarioFiltrado}"
+                         rows="10" paginator="true"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,30">
+                <f:facet name="header">
+                    Lista de Equipos Inventariados
+                </f:facet>
+                <p:column headerText="Nombre equipo" filterBy="#{inventario.equipo.NOMEQ}" filterMatchMode="contains">
                     <h:outputText value="#{inventario.equipo.NOMEQ}"/>
                 </p:column>
-                <p:column headerText="Marca equipo">
+                <p:column headerText="Marca equipo" filterBy="#{inventario.equipo.MAREQ}" filterMatchMode="contains">
                     <h:outputText value="#{inventario.equipo.MAREQ}"/>
                 </p:column>
-                <p:column headerText="Modelo equipo">
+                <p:column headerText="Modelo equipo" filterBy="#{inventario.equipo.MODEQ}" filterMatchMode="contains">
                     <h:outputText value="#{inventario.equipo.MODEQ}"/>
                 </p:column>
                 <p:column headerText="Cantidad">
@@ -49,7 +56,13 @@
                 <p:column headerText="Tipo">
                     <h:outputText value="#{inventario.TIPINV eq 'E'? 'Entrada':'Salida'}"/>
                 </p:column>
-                <p:column headerText="Fecha">
+                <p:column headerText="Fecha" filterBy="#{inventario.FECINV}" filterMatchMode="equals">
+                    <f:facet name="filter">
+                        <p:calendar>
+                            <p:ajax event="dateSelect" oncomplete="PF('wvTblInventario').filter()" update="tblInventario"/>
+                            <p:ajax event="change" oncomplete="PF('wvTblInventario').filter()" update="tblInventario"/>
+                        </p:calendar>
+                    </f:facet>
                     <h:outputText value="#{inventario.FECINV}">
                         <f:convertDateTime pattern="dd/MMM/yyyy" />
                     </h:outputText>
@@ -58,18 +71,12 @@
             </p:dataTable>
             <p:contextMenu for="tblInventario">
                 <p:menuitem value="Modificar" oncomplete="PF('dlgModInventario').show();" update=":frmModInventario"/>
-                <p:menuitem value="Eliminar" actionListener="#{inventarioC.eliminar()}" update="frmDatosInventario"/>
+                <p:menuitem value="Eliminar" actionListener="#{inventarioC.eliminar()}" oncomplete="PF('wvTblInventario').filter()" update="frmDatosInventario"/>
             </p:contextMenu>
         </h:form>
         <p:dialog widgetVar="dlgModInventario">
             <h:form id="frmModInventario"><p:growl autoUpdate="true"/>
                 <h:panelGrid columns="2">
-                    <p:outputLabel value="Equipo"/>
-                    <p:selectOneMenu required="true" filter="true" filterMatchMode="contains" disabled="true"
-                                     value="#{inventarioC.inventarioSeleccionado.equipo.IDEQ}">
-                        <f:selectItems value="#{equipoC.listaEquipo}" var="equipo" 
-                                       itemLabel="#{equipo.NOMEQ} - #{equipo.MAREQ} - #{equipo.MODEQ}" itemValue="#{equipo.IDEQ}"/>
-                    </p:selectOneMenu>
                     <p:outputLabel value="Cantidad"/>
                     <p:spinner value="#{inventarioC.inventarioSeleccionado.CNTINV}" required="true" requiredMessage="Ingrese cantidad"/>
                     <p:outputLabel value="Fecha"/>
@@ -77,7 +84,7 @@
                                 mindate="#{inventarioC.inventarioSeleccionado.FECINV}" mask="99/99/9999"/>
                 </h:panelGrid>
                 <p:commandButton value="Modificar" actionListener="#{inventarioC.editar()}"
-                                 update=":frmDatosInventario" oncomplete="PF('dlgModInventario').hide();"/>
+                                 update=":frmDatosInventario" oncomplete="if(!args.validationFailed)PF('dlgModInventario').hide();PF('wvTblInventario').filter();"/>
             </h:form>
         </p:dialog>
 

@@ -20,10 +20,11 @@
                         <p:dataTable id="tblEquipos"
                                      value="#{equipoC.listaEquipo}" var="equipo"
                                      selection="#{ventaC.listaEquipoSeleccionado}"
+                                     filteredValue="#{equipoC.listaEquipoFiltrado}"
                                      rowKey="#{equipo.IDEQ}"
-                                     rows="10" disabledSelection="#{equipo.cantidadInventario>=1?false:true}"
-                                     paginator="true" sortBy="#{equipo.cantidadInventario}" sortOrder="descending"
-                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     disabledSelection="#{equipo.cantidadInventario>=1?false:true}"
+                                     rows="10" paginator="true" sortBy="#{equipo.cantidadInventario}" sortOrder="descending"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      rowsPerPageTemplate="5,10,15,20,30"><p:growl autoUpdate="true"/>
                             <p:columnGroup type="header">
                                 <p:row>
@@ -32,9 +33,9 @@
                                     <p:column colspan="1" headerText="Vender" />
                                 </p:row>
                                 <p:row>
-                                    <p:column headerText="Nombre" />
-                                    <p:column headerText="Marca" />
-                                    <p:column headerText="Modelo" />
+                                    <p:column headerText="Nombre" filterBy="#{equipo.NOMEQ}" filterMatchMode="contains"/>
+                                    <p:column headerText="Marca" filterBy="#{equipo.MAREQ}" filterMatchMode="contains"/>
+                                    <p:column headerText="Modelo" filterBy="#{equipo.MODEQ}" filterMatchMode="contains"/>
                                     <p:column headerText="Cantidad Inv." />
                                     <p:column headerText="Precio" />
                                     <p:column headerText="Cantidad" />
@@ -80,11 +81,10 @@
                                     <f:convertNumber type="currency" currencySymbol="S/." maxFractionDigits="2"/>
                                 </p:outputLabel>
                             </f:facet>
-
+                            <p:ajax event="filter" update="tblEquipos"/>
                             <p:ajax event="rowSelect" update="tblEquipos" listener="#{ventaC.calcularVenta()}"/>
                             <p:ajax event="rowSelectCheckbox" update="tblEquipos" listener="#{ventaC.calcularVenta()}"/>
                             <p:ajax event="rowUnselectCheckbox" update="tblEquipos" listener="#{ventaC.calcularVenta()}"/>
-
                             <f:facet name="footer">
                                 <p:commandButton update="tblEquipos :frmReporte" process="tblEquipos"
                                                  id="btnVender" action="#{equipoC.listar()}"
@@ -102,7 +102,9 @@
                 </p:tab>
                 <p:tab title="Ventas Realizadas">
                     <h:form id="frmDatosVentas">
-                        <p:dataTable id="tblVentas" var="detalle" value="#{ventaC.listaDetalle}"
+                        <p:dataTable id="tblVentas" var="detalle" widgetVar="wvTblVentas"
+                                     value="#{ventaC.listaDetalle}" 
+                                     filteredValue="#{ventaC.listaDetalleFiltrado}"
                                      rows="10"
                                      paginator="true" sortBy="#{detalle.venta.FECVEN}" sortOrder="descending"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -130,24 +132,40 @@
 
                             </f:facet>
 
-                            <p:column headerText="Sucursal" >
+                            <p:column headerText="Sucursal" 
+                                      filterBy="#{detalle.venta.vendedor.trabajador.sucursal.NOMSUC}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{detalle.venta.vendedor.trabajador.sucursal.NOMSUC}" />
                             </p:column>
-                            <p:column headerText="Vendedor" >
+                            <p:column headerText="Vendedor" 
+                                      filterBy="#{detalle.venta.vendedor.trabajador.persona.NOMPER}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{detalle.venta.vendedor.trabajador.persona.NOMPER}, 
                                               #{detalle.venta.vendedor.trabajador.persona.APEPER}" />
                             </p:column>
-                            <p:column headerText="Comprador" >
+                            <p:column headerText="Comprador" 
+                                      filterBy="#{detalle.venta.comprador.NOMPER}"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{detalle.venta.comprador.NOMPER}, 
                                               #{detalle.venta.comprador.APEPER}" />
                             </p:column>
-                            <p:column headerText="Fecha">
+                            <p:column headerText="Fecha"
+                                      filterBy="#{detalle.venta.FECVEN}"
+                                      filterMatchMode="equals">
+                                <f:facet name="filter">
+                                    <p:calendar>
+                                        <p:ajax event="dateSelect" oncomplete="PF('wvTblVentas').filter()" update="tblVentas"/>
+                                        <p:ajax event="change" oncomplete="PF('wvTblVentas').filter()" update="tblVentas"/>
+                                    </p:calendar>
+                                </f:facet>
                                 <h:outputText value="#{detalle.venta.FECVEN}" >
                                     <f:convertDateTime pattern="dd/MMM/yyyy" />
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="Equipo">
-                                <h:outputText value="#{detalle.equipo.NOMEQ}" />
+                            <p:column headerText="Equipo"
+                                      filterBy="#{detalle.equipo.NOMEQ}"
+                                      filterMatchMode="contains">
+                                <h:outputText value="#{detalle.equipo.NOMEQ} - #{detalle.equipo.MAREQ} - #{detalle.equipo.MODEQ}" />
                             </p:column>
                             <p:column headerText="Precio">
                                 <h:outputText value="#{detalle.equipo.PREEQ}" />
@@ -176,7 +194,7 @@
                     <p:inputText value="#{personaC.persona.DIRPER}"/>
                 </h:panelGrid>
                 <p:commandButton value="Agregar" actionListener="#{personaC.registrar()}" 
-                                 update="frmRegPer :tbTbls" oncomplete="PF('dlgRegPersona').hide();"/>
+                                 update="frmRegPer :tbTbls" oncomplete="if(!args.validationFailed)PF('dlgRegPersona').hide();"/>
             </h:form>
         </p:dialog>        
     </h:body>

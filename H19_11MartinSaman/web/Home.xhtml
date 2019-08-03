@@ -13,6 +13,8 @@
         <ui:fragment rendered="#{loginC.loginSesion.TIPLOG eq 'A' ? true : false}">
             <h:form id="frmDashboard">
                 <p:chart type="bar" model="#{dashboardC.barVentas}"/>
+            </h:form>
+            <h:form>
                 <p:selectOneMenu value="#{dashboardC.idsuc}" id="btnRC" height="200" 
                                  style="width: 30% !important"
                                  panelStyle="width: 30% !important"
@@ -22,8 +24,8 @@
                                    itemValue="#{sucursal.IDSUC}" itemLabel="#{sucursal.NOMSUC}"/>
                     <p:ajax event="change" oncomplete="rc()" listener="#{dashboardC.listar()}"/>
                 </p:selectOneMenu>
-                <p:remoteCommand name="rc" update="frmDashboard"/>
-                <p:blockUI trigger="btnRC" block="frmDashboard"/>
+                <p:remoteCommand name="rc" update=":frmDashboard"/>
+                <p:blockUI trigger="btnRC" block=":frmDashboard"/>
             </h:form>
         </ui:fragment>
     </h:body>

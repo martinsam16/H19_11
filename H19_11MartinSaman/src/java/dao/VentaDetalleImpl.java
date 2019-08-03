@@ -140,4 +140,9 @@ public class VentaDetalleImpl extends Conexion implements ICrud<VentaDetalle> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public boolean existe(VentaDetalle modelo, List<VentaDetalle> listaModelo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

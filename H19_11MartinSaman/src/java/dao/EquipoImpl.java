@@ -101,4 +101,14 @@ public class EquipoImpl extends Conexion implements ICrud<Equipo> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public boolean existe(Equipo modelo, List<Equipo> listaModelo) {
+        for (Equipo equipo : listaModelo) {
+            if (modelo.equals(equipo)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

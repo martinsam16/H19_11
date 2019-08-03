@@ -17,7 +17,6 @@ import modelo.Inventario;
 import modelo.Login;
 import modelo.Venta;
 import modelo.VentaDetalle;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 @Named(value = "ventaC")
@@ -28,7 +27,7 @@ public class VentaC implements Serializable {
     VentaDetalleImpl daoDetalle;
     VentaDetalle detalle;
     Venta venta;
-    List<VentaDetalle> listaDetalle, listaSeleccionada;
+    List<VentaDetalle> listaDetalle, listaDetalleFiltrado, listaSeleccionada;
     List<Venta> listaVenta;
     List<Equipo> listaEquipoSeleccionado;
     Inventario inventario;
@@ -117,11 +116,18 @@ public class VentaC implements Serializable {
                 listarDetalle(login);
                 listaEquipoSeleccionado.clear();
                 actualizarReporte();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Venta realizada satisfactoriamente.",
+                                null));
                 calcularVenta();
 //            venta.clear();
 //            detalle.clear();
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Seleccione almenos un producto"));
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Seleccione almenos un producto.",
+                                null));
             }
 
         } catch (Exception e) {
@@ -131,6 +137,14 @@ public class VentaC implements Serializable {
 
     public void actualizarReporte() throws Exception {
         reporte = daoVenta.generarReporte(venta);
+    }
+
+    public List<VentaDetalle> getListaDetalleFiltrado() {
+        return listaDetalleFiltrado;
+    }
+
+    public void setListaDetalleFiltrado(List<VentaDetalle> listaDetalleFiltrado) {
+        this.listaDetalleFiltrado = listaDetalleFiltrado;
     }
 
     public VentaDetalle getDetalle() {

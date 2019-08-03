@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.context.FacesContext;
 import modelo.Login;
 import modelo.Trabajador;
 
@@ -17,7 +19,7 @@ public class TrabajadorC implements Serializable {
 
     Trabajador trabajador, trabajadorSeleccionado;
     TrabajadorImpl daoTrabajador;
-    List<Trabajador> listaTrabajador;
+    List<Trabajador> listaTrabajador, listaTrabajadorFiltrado;
     @ManagedProperty("#{loginC}")
     LoginC loginC = new LoginC();
 
@@ -50,10 +52,22 @@ public class TrabajadorC implements Serializable {
             if (login.getTIPLOG().equals("J")) {
                 trabajador.setSucursal(login.getTrabajador().getSucursal());
             }
-            daoTrabajador.registrar(trabajador);
-            listar();            
-            loginC.registrar(listaTrabajador.get(listaTrabajador.size() - 1));
-            trabajador.clear();
+            if (daoTrabajador.existe(trabajador, listaTrabajador) == false) {
+                daoTrabajador.registrar(trabajador);
+                listar();
+                loginC.registrar(listaTrabajador.get(listaTrabajador.size() - 1));
+                trabajador.clear();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Trabajador registrado correctamente.",
+                                null));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_FATAL,
+                                "El trabajador al que intentaste registrar, ya está laborando.",
+                                null));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,6 +83,10 @@ public class TrabajadorC implements Serializable {
             loginC.editar(trabajadorSeleccionado);
             listar();
             trabajadorSeleccionado.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Modificado correctamente.",
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,9 +98,21 @@ public class TrabajadorC implements Serializable {
             loginC.eliminar(trabajadorSeleccionado);
             listar();
             trabajadorSeleccionado.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Eliminación correcta.",
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Trabajador> getListaTrabajadorFiltrado() {
+        return listaTrabajadorFiltrado;
+    }
+
+    public void setListaTrabajadorFiltrado(List<Trabajador> listaTrabajadorFiltrado) {
+        this.listaTrabajadorFiltrado = listaTrabajadorFiltrado;
     }
 
     public Trabajador getTrabajador() {

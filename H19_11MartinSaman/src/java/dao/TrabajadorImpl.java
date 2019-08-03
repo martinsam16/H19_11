@@ -125,4 +125,14 @@ public class TrabajadorImpl extends Conexion implements ICrud<Trabajador> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public boolean existe(Trabajador modelo, List<Trabajador> listaModelo) {
+        for (Trabajador trabajador : listaModelo) {
+            if (modelo.equals(trabajador)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

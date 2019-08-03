@@ -100,4 +100,14 @@ public class PersonaImpl extends Conexion implements ICrud<Persona> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public boolean existe(Persona modelo, List<Persona> listaModelo) {
+        for (Persona per : listaModelo) {
+            if (modelo.equals(per)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

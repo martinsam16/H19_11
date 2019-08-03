@@ -1,15 +1,41 @@
 package modelo;
 
+import java.util.Objects;
+
 public class Sucursal {
 
     private int IDSUC;
     private String NOMSUC, DIRSUC, ESTSUC;
-    
-    public void clear(){
+
+    public void clear() {
         this.IDSUC = 0;
         this.NOMSUC = null;
         this.DIRSUC = null;
         this.ESTSUC = null;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Sucursal other = (Sucursal) obj;
+        if (!Objects.equals(this.NOMSUC, other.NOMSUC.trim())) {
+            return false;
+        }
+        return true;
     }
 
     public int getIDSUC() {

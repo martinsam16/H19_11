@@ -1,6 +1,7 @@
 package modelo;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Trabajador {
 
@@ -8,13 +9,36 @@ public class Trabajador {
     private Persona persona = new Persona();
     private int IDTRAB;
     private Date FECINITRAB, FECFINTRAB;
-    private String ESTTRAB, TIPTRAB="V";
+    private String ESTTRAB = "A", TIPTRAB = "V";
 
     @Override
     public String toString() {
         return "Trabajador{" + "sucursal=" + sucursal + ", persona=" + persona + ", IDTRAB=" + IDTRAB + ", FECINITRAB=" + FECINITRAB + ", FECFINTRAB=" + FECFINTRAB + ", ESTTRAB=" + ESTTRAB + ", TIPTRAB=" + TIPTRAB + '}';
     }
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Trabajador other = (Trabajador) obj;
+        if (!Objects.equals(this.persona.getIDPER(), other.persona.getIDPER())) {
+            return false;
+        }
+        return true;
+    }
 
     public void clear() {
 //        this.sucursal.clear();

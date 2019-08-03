@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import modelo.Equipo;
 
 @Named(value = "equipoC")
@@ -14,7 +16,7 @@ import modelo.Equipo;
 public class EquipoC implements Serializable {
 
     Equipo equipo, equipoSeleccionado;
-    List<Equipo> listaEquipo;
+    List<Equipo> listaEquipo, listaEquipoFiltrado;
     EquipoImpl daoEquipo;
 
     public EquipoC() {
@@ -34,9 +36,21 @@ public class EquipoC implements Serializable {
 
     public void registrar() throws Exception {
         try {
-            daoEquipo.registrar(equipo);
-            listar();
-            equipo.clear();
+            if (daoEquipo.existe(equipo, listaEquipo) == false) {
+                daoEquipo.registrar(equipo);
+                listar();
+                equipo.clear();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Equipo guardado correctamente.",
+                                null));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_FATAL,
+                                "El equipo al que intentaste registrar, ya existe.",
+                                null));
+            }
+
         } catch (Exception e) {
         }
     }
@@ -46,6 +60,10 @@ public class EquipoC implements Serializable {
             daoEquipo.editar(equipoSeleccionado);
             listar();
             equipoSeleccionado.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Equipo modificado correctamente.",
+                            null));
         } catch (Exception e) {
         }
     }
@@ -55,6 +73,10 @@ public class EquipoC implements Serializable {
             daoEquipo.eliminar(equipoSeleccionado);
             listar();
             equipoSeleccionado.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Equipo eliminado correctamente.",
+                            null));
         } catch (Exception e) {
         }
     }
@@ -65,6 +87,14 @@ public class EquipoC implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Equipo> getListaEquipoFiltrado() {
+        return listaEquipoFiltrado;
+    }
+
+    public void setListaEquipoFiltrado(List<Equipo> listaEquipoFiltrado) {
+        this.listaEquipoFiltrado = listaEquipoFiltrado;
     }
 
     public Equipo getEquipo() {

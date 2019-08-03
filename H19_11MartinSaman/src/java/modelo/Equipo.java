@@ -1,11 +1,43 @@
 package modelo;
 
+import java.util.Objects;
+
 public class Equipo {
 
     private int IDEQ;
     private String NOMEQ, MAREQ, MODEQ, ESTEQ;
     private float PREEQ = (float) 0.1;
     private int cantidadInventario, cantidadVender = 1;
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Equipo other = (Equipo) obj;
+        if (!Objects.equals(this.NOMEQ, other.NOMEQ.trim())) {
+            return false;
+        }
+        if (!Objects.equals(this.MAREQ, other.MAREQ.trim())) {
+            return false;
+        }
+        if (!Objects.equals(this.MODEQ, other.MODEQ.trim())) {
+            return false;
+        }
+        return true;
+    }
 
     public void clear() {
         this.IDEQ = 0;

@@ -113,4 +113,9 @@ public class VentaImpl extends Conexion implements ICrud<Venta> {
         return new DefaultStreamedContent(inputStream, "application/pdf", "Boleta_" + String.valueOf(modelo.getFECVEN()));
 
     }
+
+    @Override
+    public boolean existe(Venta modelo, List<Venta> listaModelo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

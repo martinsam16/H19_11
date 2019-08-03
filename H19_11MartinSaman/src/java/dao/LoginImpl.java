@@ -3,32 +3,43 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import modelo.Login;
 import modelo.Sucursal;
 import modelo.Trabajador;
 import org.primefaces.model.StreamedContent;
 
 public class LoginImpl extends Conexion implements ICrud<Login> {
-    
+
     @Override
     public void registrar(Login modelo) throws Exception {
         try {
+            modelo.setUSRLOG(modelo.getTrabajador().getPersona().getNOMPER().trim().replace(" ", ".").toLowerCase());
+            modelo.setPSSWLOG(modelo.getTrabajador().getPersona().getAPEPER().trim().replace(" ", ".").toLowerCase());
+
             String sql = "INSERT INTO LOGIN (IDTRAB, USRLOG, PSSWLOG, TIPLOG) VALUES (?,?,?,?)";
             PreparedStatement ps = this.conectar().prepareStatement(sql);
             ps.setInt(1, modelo.getTrabajador().getIDTRAB());
-            ps.setString(2, modelo.getTrabajador().getPersona().getNOMPER().trim().replace(" ", ".").toLowerCase());
-            ps.setString(3, modelo.getTrabajador().getPersona().getAPEPER().trim().replace(" ", ".").toLowerCase());
+            ps.setString(2, modelo.getUSRLOG());
+            ps.setString(3, modelo.getPSSWLOG());
             ps.setString(4, modelo.getTrabajador().getTIPTRAB());
             ps.executeUpdate();
             ps.clearParameters();
             ps.close();
+
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "USUARIO:" + modelo.getUSRLOG() + "\n"
+                            + "CONTRASEÑA:" + modelo.getPSSWLOG(),
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             this.desconectar();
         }
     }
-    
+
     @Override
     public void editar(Login modelo) throws Exception {
         try {
@@ -45,7 +56,7 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
             this.desconectar();
         }
     }
-    
+
     @Override
     public void eliminar(Login modelo) throws Exception {
         try {
@@ -61,7 +72,7 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
             this.desconectar();
         }
     }
-    
+
     @Override
     public Login obtenerModelo(Login modelo) throws Exception {
         Login login = new Login();
@@ -69,7 +80,12 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
             String sql = "SELECT login.IDLOG, login.TIPLOG, login.ESTLOG, login.IDTRAB, trabajador.IDSUC FROM LOGIN login "
                     + "INNER JOIN TRABAJADOR trabajador "
                     + "ON login.IDTRAB = trabajador.IDTRAB "
-                    + "WHERE login.USRLOG=? AND login.PSSWLOG=? AND login.ESTLOG='A'";
+                    + "INNER JOIN SUCURSAL sucursal "
+                    + "ON trabajador.IDSUC = sucursal.IDSUC "
+                    + "WHERE login.USRLOG=? "
+                    + "AND login.PSSWLOG=? "
+                    + "AND login.ESTLOG='A' "
+                    + "AND sucursal.ESTSUC='A' ";
             PreparedStatement ps = this.conectar().prepareStatement(sql);
             ps.setString(1, modelo.getUSRLOG());
             ps.setString(2, modelo.getPSSWLOG());
@@ -94,7 +110,7 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
         }
         return login;
     }
-    
+
     @Override
     public List<Login> listar() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -104,5 +120,10 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
     public StreamedContent generarReporte(Login modelo) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    @Override
+    public boolean existe(Login modelo, List<Login> listaModelo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

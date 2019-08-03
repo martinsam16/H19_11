@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
     <h:head>
         <title>Empleados - Computech</title>
     </h:head>
@@ -36,41 +36,61 @@
                 <p:outputLabel value="Fecha Inicio labores"/>
                 <p:calendar value="#{trabajadorC.trabajador.FECINITRAB}" required="true" mindate="calwidget.today()" widgetVar="calwidget"
                             requiredMessage="Ingrese fecha inicio de labores"/>
+                <p:commandButton value="Guardar" actionListener="#{trabajadorC.registrar(loginC.loginSesion)}"
+                                 oncomplete="PF('wvTblTrabajador').filter()"
+                                 update="frmRegistrarTrabajador :frmTblTrab"/>
+                <p:commandButton value="Agregar Persona" update=":frmRegPer" oncomplete="PF('dlgRegPersona').show();" immediate="true"/>
             </h:panelGrid>
-            <p:commandButton value="Guardar" actionListener="#{trabajadorC.registrar(loginC.loginSesion)}" 
-                             update="frmRegistrarTrabajador :frmTblTrab"/>
-            <p:commandButton value="Agregar Persona" update=":frmRegPer" oncomplete="PF('dlgRegPersona').show();" immediate="true"/>
         </h:form>
 
         <h:form id="frmTblTrab">
-            <p:dataTable id="tblTrabajador" var="trabajador" 
+            <p:dataTable id="tblTrabajador" var="trabajador" widgetVar="wvTblTrabajador"
                          selection="#{trabajadorC.trabajadorSeleccionado}"
                          selectionMode="single"
                          rowKey="#{trabajador.IDTRAB}"
-                         value="#{trabajadorC.listaTrabajador}">
+                         value="#{trabajadorC.listaTrabajador}"
+                         filteredValue="#{trabajadorC.listaTrabajadorFiltrado}"
+                         rows="10" paginator="true"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,30"><p:growl autoUpdate="true"/>
                 <f:facet name="header">
                     Lista de Empleados
                 </f:facet>
-                <p:column headerText="Sucursal">
+                <p:column headerText="Sucursal" filterBy="#{trabajador.sucursal.NOMSUC}" filterMatchMode="contains">
                     <h:outputText value="#{trabajador.sucursal.NOMSUC}"/>
                 </p:column>
-                <p:column headerText="Nombres y Apellidos">
-                    <h:outputText value="#{trabajador.persona.NOMPER}, #{trabajador.persona.APEPER}"/>
+                <p:column headerText="Nombres" filterBy="#{trabajador.persona.NOMPER}" filterMatchMode="contains">
+                    <h:outputText value="#{trabajador.persona.NOMPER}"/>
+                </p:column>
+                <p:column headerText="Apellidos" filterBy="#{trabajador.persona.APEPER}" filterMatchMode="contains">
+                    <h:outputText value="#{trabajador.persona.APEPER}"/>
                 </p:column>
                 <p:column headerText="Cargo">
                     <h:outputText value="#{trabajador.TIPTRAB eq 'A'? 'Administrador': 
                                            trabajador.TIPTRAB eq 'V'? 'Vendedor': 'Jefe Sucursal'}"/>
                 </p:column>
-                <p:column headerText="Fecha Inicio">
-                    <h:outputText value="#{trabajador.FECINITRAB}"/>
+
+                <p:column headerText="Fecha Inicio" filterBy="#{trabajador.FECINITRAB}" filterMatchMode="equals">
+                    <f:facet name="filter">
+                        <p:calendar>
+                            <p:ajax event="dateSelect" oncomplete="PF('wvTblTrabajador').filter();" update="tblTrabajador"/>
+                            <p:ajax event="change" oncomplete="PF('wvTblTrabajador').filter();" update="tblTrabajador"/>
+                        </p:calendar>
+                    </f:facet>
+                    <h:outputText value="#{trabajador.FECINITRAB}">
+                        <f:convertDateTime pattern="dd/MMM/yyyy" />
+                    </h:outputText>
                 </p:column>
                 <p:column headerText="Fecha Fin">
-                    <h:outputText value="#{trabajador.FECFINTRAB eq null ? 'Laborando' : trabajador.FECFINTRAB}"/>
+                    <h:outputText value="#{trabajador.FECFINTRAB eq null ? 'Laborando' : trabajador.FECFINTRAB}">
+                        <f:convertDateTime pattern="dd/MMM/yyyy" />
+                    </h:outputText>
                 </p:column>
             </p:dataTable>
             <p:contextMenu for="tblTrabajador">
                 <p:menuitem value="Modificar" oncomplete="PF('dlgModTrabajador').show();" update=":frmModTrab"/>
-                <p:menuitem value="Eliminar" actionListener="#{trabajadorC.eliminar()}" update="frmTblTrab"/>
+                <p:menuitem value="Eliminar" actionListener="#{trabajadorC.eliminar()}" 
+                            update="frmTblTrab" oncomplete="PF('wvTblTrabajador').filter();"/>
             </p:contextMenu>
         </h:form>
         <p:dialog widgetVar="dlgRegPersona">
@@ -86,18 +106,12 @@
                     <p:inputText value="#{personaC.persona.DIRPER}"/>
                 </h:panelGrid>
                 <p:commandButton value="Guardar" actionListener="#{personaC.registrar()}" 
-                                 update=":frmRegistrarTrabajador" oncomplete="PF('dlgRegPersona').hide();"/>
+                                 update=":frmRegistrarTrabajador" oncomplete="if(!args.validationFailed)PF('dlgRegPersona').hide();"/>
             </h:form>
         </p:dialog>
         <p:dialog widgetVar="dlgModTrabajador" header="Modificar Datos Trabajador">
             <h:form id="frmModTrab"><p:growl autoUpdate="true"/>
                 <h:panelGrid columns="2">
-                    <p:outputLabel value="Persona"/>
-                    <p:selectOneMenu required="true" filter="true" filterMatchMode="contains"
-                                     value="#{trabajadorC.trabajadorSeleccionado.persona.IDPER}">
-                        <f:selectItems value="#{personaC.listaPrsona}" var="persona" 
-                                       itemLabel="#{persona.NOMPER} #{persona.APEPER}" itemValue="#{persona.IDPER}"/>
-                    </p:selectOneMenu>
                     <p:outputLabel value="Sucursal" rendered="#{loginC.loginSesion.TIPLOG eq 'J' ?  false: true}"/>
                     <p:selectOneMenu filter="true" filterMatchMode="contains" required="true"
                                      rendered="#{loginC.loginSesion.TIPLOG eq 'J' ? false : true}"
@@ -115,16 +129,13 @@
                     </p:selectOneRadio>
                     <p:outputLabel value="Fecha Inicio labores"/>
                     <p:calendar value="#{trabajadorC.trabajadorSeleccionado.FECINITRAB}" required="true"
-                                requiredMessage="Ingrese fecha inoicio de labores">
-                        <f:convertDateTime pattern="dd/MMM/yyyy" />
-                    </p:calendar>
+                                requiredMessage="Ingrese fecha inicio de labores"/>
                     <p:outputLabel value="Fecha Fin labores"/>
-                    <p:calendar value="#{trabajadorC.trabajadorSeleccionado.FECFINTRAB}" mindate="#{trabajadorC.trabajadorSeleccionado.FECINITRAB}">
-                        <f:convertDateTime pattern="dd/MMM/yyyy" />
-                    </p:calendar>
+                    <p:calendar value="#{trabajadorC.trabajadorSeleccionado.FECFINTRAB}" 
+                                mindate="#{trabajadorC.trabajadorSeleccionado.FECINITRAB}"/>
                 </h:panelGrid>
                 <p:commandButton value="Modificar" actionListener="#{trabajadorC.editar()}" update="frmModTrab :frmTblTrab"
-                                 oncomplete="PF('dlgModTrabajador').hide();"/>
+                                 oncomplete="if(!args.validationFailed)PF('dlgModTrabajador').hide();PF('wvTblTrabajador').filter();"/>
 
             </h:form>
         </p:dialog>

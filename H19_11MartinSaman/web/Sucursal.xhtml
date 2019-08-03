@@ -21,15 +21,22 @@
                              update="frmRegistrarSucursal :frmDatosSucursal"/>
         </h:form>
         <h:form id="frmDatosSucursal"><p:growl autoUpdate="true"/>
-            <p:dataTable id="tblSucursal" var="sucursal" 
+            <p:dataTable id="tblSucursal" var="sucursal"
                          selection="#{sucursalC.sucursalSeleccionada}"
                          selectionMode="single"
                          rowKey="#{sucursal.IDSUC}"
-                         value="#{sucursalC.listaSucursal}">
-                <p:column headerText="Nombre">
+                         value="#{sucursalC.listaSucursal}"
+                         filteredValue="#{sucursalC.listaSucursalFiltrado}"
+                         rows="10" paginator="true"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,30">
+                <f:facet name="header">
+                    Lista de Sucursales Registradas
+                </f:facet>
+                <p:column headerText="Nombre" filterBy="#{sucursal.NOMSUC}">
                     <h:outputText value="#{sucursal.NOMSUC}"/>
                 </p:column>
-                <p:column headerText="Dirección">
+                <p:column headerText="Dirección" filterBy="#{sucursal.DIRSUC}">
                     <h:outputText value="#{sucursal.DIRSUC}"/>
                 </p:column>
 
@@ -48,7 +55,7 @@
                     <p:inputText value="#{sucursalC.sucursalSeleccionada.DIRSUC}" required="true" requiredMessage="Ingresar dirección de sucursal"/>
                 </h:panelGrid>
                 <p:commandButton value="Modificar" actionListener="#{sucursalC.editar()}" 
-                                 update="frmModSucursal :frmDatosSucursal" oncomplete="PF('dlgModSucursal').hide();"/>
+                                 update="frmModSucursal :frmDatosSucursal" oncomplete="if(!args.validationFailed)PF('dlgModSucursal').hide();"/>
             </h:form>
         </p:dialog>
     </h:body>

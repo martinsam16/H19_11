@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import modelo.Persona;
 
 @Named(value = "personaC")
@@ -15,7 +17,7 @@ public class PersonaC implements Serializable {
 
     Persona persona, personaSeleccionada;
     PersonaImpl daoPersona;
-    List<Persona> listaPrsona;
+    List<Persona> listaPrsona, listaPrsonaFiltrado;
 
     public PersonaC() {
         persona = new Persona();
@@ -42,9 +44,21 @@ public class PersonaC implements Serializable {
 
     public void registrar() throws Exception {
         try {
-            daoPersona.registrar(persona);
-            listar();
-            persona.clear();
+            if (daoPersona.existe(persona, listaPrsona) == false) {
+                daoPersona.registrar(persona);
+                listar();
+                persona.clear();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Persona registrada correctamente.",
+                                null));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_FATAL,
+                                "La persona a la que intentaste registrar, ya existe.",
+                                null));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,6 +69,10 @@ public class PersonaC implements Serializable {
             daoPersona.editar(personaSeleccionada);
             listar();
             personaSeleccionada.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Persona modificada correctamente.",
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,9 +83,21 @@ public class PersonaC implements Serializable {
             daoPersona.eliminar(personaSeleccionada);
             listar();
             personaSeleccionada.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Persona eliminada correctamente.",
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Persona> getListaPrsonaFiltrado() {
+        return listaPrsonaFiltrado;
+    }
+
+    public void setListaPrsonaFiltrado(List<Persona> listaPrsonaFiltrado) {
+        this.listaPrsonaFiltrado = listaPrsonaFiltrado;
     }
 
     public Persona getPersona() {

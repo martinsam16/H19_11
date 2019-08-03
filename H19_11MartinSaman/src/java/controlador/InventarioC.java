@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import modelo.Inventario;
 
 @Named(value = "inventarioC")
@@ -14,7 +16,7 @@ import modelo.Inventario;
 public class InventarioC implements Serializable {
 
     Inventario inventario, inventarioSeleccionado;
-    List<Inventario> listaInventario;
+    List<Inventario> listaInventario, listaInventarioFiltrado;
     InventarioImpl daoInventario;
 
     public InventarioC() {
@@ -46,6 +48,10 @@ public class InventarioC implements Serializable {
             daoInventario.registrar(inventario);
             listar();
             inventario.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Equipo inventariado.",
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,6 +62,10 @@ public class InventarioC implements Serializable {
             daoInventario.editar(inventarioSeleccionado);
             listar();
             inventarioSeleccionado.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Inventario de equipo modificado correctamente.",
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,9 +76,21 @@ public class InventarioC implements Serializable {
             daoInventario.eliminar(inventarioSeleccionado);
             listar();
             inventarioSeleccionado.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Eliminación correcta.",
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Inventario> getListaInventarioFiltrado() {
+        return listaInventarioFiltrado;
+    }
+
+    public void setListaInventarioFiltrado(List<Inventario> listaInventarioFiltrado) {
+        this.listaInventarioFiltrado = listaInventarioFiltrado;
     }
 
     public Inventario getInventario() {

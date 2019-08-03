@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import modelo.Sucursal;
 
 @Named(value = "sucursalC")
@@ -14,7 +16,7 @@ import modelo.Sucursal;
 public class SucursalC implements Serializable {
 
     Sucursal sucursal, sucursalSeleccionada;
-    List<Sucursal> listaSucursal;
+    List<Sucursal> listaSucursal, listaSucursalFiltrado;
     SucursalImpl daoSucursal;
 
     public SucursalC() {
@@ -42,9 +44,21 @@ public class SucursalC implements Serializable {
 
     public void registrar() throws Exception {
         try {
-            daoSucursal.registrar(sucursal);
-            listar();
-            sucursal.clear();
+            if (daoSucursal.existe(sucursal, listaSucursal) == false) {
+                daoSucursal.registrar(sucursal);
+                listar();
+                sucursal.clear();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Sucursal registrada correctamente.",
+                                null));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_FATAL,
+                                "La sucursal a la que intentaste registrar, ya existe.",
+                                null));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,6 +69,10 @@ public class SucursalC implements Serializable {
             daoSucursal.editar(sucursalSeleccionada);
             listar();
             sucursalSeleccionada.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Sucursal modificada correctamente.",
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,9 +83,21 @@ public class SucursalC implements Serializable {
             daoSucursal.eliminar(sucursalSeleccionada);
             listar();
             sucursalSeleccionada.clear();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Sucursal eliminada correctamente.",
+                            null));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Sucursal> getListaSucursalFiltrado() {
+        return listaSucursalFiltrado;
+    }
+
+    public void setListaSucursalFiltrado(List<Sucursal> listaSucursalFiltrado) {
+        this.listaSucursalFiltrado = listaSucursalFiltrado;
     }
 
     public Sucursal getSucursal() {

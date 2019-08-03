@@ -110,4 +110,9 @@ public class InventarioImpl extends Conexion implements ICrud<Inventario> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public boolean existe(Inventario modelo, List<Inventario> listaModelo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

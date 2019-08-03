@@ -18,4 +18,6 @@ public interface ICrud<T> {
 
     public StreamedContent generarReporte(T modelo) throws JRException, Exception;
 
+    // Validaciones
+    public boolean existe(T modelo, List<T> listaModelo);
 }

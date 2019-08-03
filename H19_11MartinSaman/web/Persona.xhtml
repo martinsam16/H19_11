@@ -28,19 +28,26 @@
             <p:dataTable id="tblPersona" var="persona" 
                          selection="#{personaC.personaSeleccionada}"
                          selectionMode="single"
+                         filteredValue="#{personaC.listaPrsonaFiltrado}"
                          rowKey="#{persona.IDPER}"
-                         value="#{personaC.listaPrsona}">
-                <p:column headerText="Nombres">
+                         value="#{personaC.listaPrsona}"
+                         rows="10" paginator="true"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,30">
+                <f:facet name="header">
+                    Lista de Personas Registradas
+                </f:facet>
+                <p:column headerText="Nombres" filterBy="#{persona.NOMPER}" filterMatchMode="contains">
                     <h:outputText value="#{persona.NOMPER}"/>
                 </p:column>
-                <p:column headerText="Apellidos">
+                <p:column headerText="Apellidos" filterBy="#{persona.APEPER}" filterMatchMode="contains">
                     <h:outputText value="#{persona.APEPER}"/>
                 </p:column>
-                <p:column headerText="DNI">
-                    <h:outputText value="#{persona.DNIPER}"/>
+                <p:column headerText="DNI" filterBy="#{persona.DNIPER}" filterMatchMode="contains">
+                    <h:outputText value="#{persona.DNIPER eq null ? 'DNI no registrado' : persona.DNIPER}"/>
                 </p:column>
-                <p:column headerText="Dirección">
-                    <h:outputText value="#{persona.DIRPER}"/>
+                <p:column headerText="Dirección" filterBy="#{persona.DIRPER}" filterMatchMode="contains">
+                    <h:outputText value="#{persona.DIRPER eq null ?  'Dirección no registrada' : persona.DIRPER}"/>
                 </p:column>
 
             </p:dataTable>
@@ -62,7 +69,7 @@
                     <p:inputText value="#{personaC.personaSeleccionada.DIRPER}"/>
                 </h:panelGrid>
                 <p:commandButton value="Modificar" actionListener="#{personaC.editar()}" 
-                                 update=":frmDatosPersona" oncomplete="PF('dlgModPersona').hide();"/>
+                                 update=":frmDatosPersona" oncomplete="if(!args.validationFailed)PF('dlgModPersona').hide();"/>
             </h:form>
         </p:dialog>
 

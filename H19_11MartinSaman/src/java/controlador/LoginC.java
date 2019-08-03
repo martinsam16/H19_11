@@ -32,10 +32,23 @@ public class LoginC implements Serializable {
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/H19_11MartinSaman/faces/Home.xhtml");
                 }
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error credenciales"));
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_FATAL,
+                                "Usuario y/o contraseña incorrectos.",
+                                null));
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void volverHome() throws Exception {
+        if (loginSesion.getIDLOG() != 0) {
+            if (loginSesion.getTIPLOG().equals("V")) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/H19_11MartinSaman/faces/Venta.xhtml");
+            } else {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/H19_11MartinSaman/faces/Home.xhtml");
+            }
         }
     }
 

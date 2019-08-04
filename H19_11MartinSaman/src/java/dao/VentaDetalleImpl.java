@@ -136,12 +136,12 @@ public class VentaDetalleImpl extends Conexion implements ICrud<VentaDetalle> {
     }
 
     @Override
-    public StreamedContent generarReporte(VentaDetalle modelo) throws Exception {
+    public boolean existe(VentaDetalle modelo, List<VentaDetalle> listaModelo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean existe(VentaDetalle modelo, List<VentaDetalle> listaModelo) {
+    public List<VentaDetalle> listar(VentaDetalle modelo) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

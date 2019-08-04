@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Sucursal;
-import org.primefaces.model.StreamedContent;
 
 public class SucursalImpl extends Conexion implements ICrud<Sucursal> {
 
@@ -90,11 +89,6 @@ public class SucursalImpl extends Conexion implements ICrud<Sucursal> {
     }
 
     @Override
-    public StreamedContent generarReporte(Sucursal modelo) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public boolean existe(Sucursal modelo, List<Sucursal> listaModelo) {
         for (Sucursal sucursal : listaModelo) {
             if (modelo.equals(sucursal)) {
@@ -102,6 +96,11 @@ public class SucursalImpl extends Conexion implements ICrud<Sucursal> {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<Sucursal> listar(Sucursal modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

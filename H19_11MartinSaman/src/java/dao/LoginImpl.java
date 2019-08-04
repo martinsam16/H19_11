@@ -8,7 +8,6 @@ import javax.faces.context.FacesContext;
 import modelo.Login;
 import modelo.Sucursal;
 import modelo.Trabajador;
-import org.primefaces.model.StreamedContent;
 
 public class LoginImpl extends Conexion implements ICrud<Login> {
 
@@ -117,12 +116,12 @@ public class LoginImpl extends Conexion implements ICrud<Login> {
     }
 
     @Override
-    public StreamedContent generarReporte(Login modelo) throws Exception {
+    public boolean existe(Login modelo, List<Login> listaModelo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean existe(Login modelo, List<Login> listaModelo) {
+    public List<Login> listar(Login modelo) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

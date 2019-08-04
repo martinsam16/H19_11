@@ -8,7 +8,6 @@ import java.util.List;
 import modelo.Persona;
 import modelo.Sucursal;
 import modelo.Trabajador;
-import org.primefaces.model.StreamedContent;
 
 public class TrabajadorImpl extends Conexion implements ICrud<Trabajador> {
 
@@ -121,11 +120,6 @@ public class TrabajadorImpl extends Conexion implements ICrud<Trabajador> {
     }
 
     @Override
-    public StreamedContent generarReporte(Trabajador modelo) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public boolean existe(Trabajador modelo, List<Trabajador> listaModelo) {
         for (Trabajador trabajador : listaModelo) {
             if (modelo.equals(trabajador)) {
@@ -133,6 +127,11 @@ public class TrabajadorImpl extends Conexion implements ICrud<Trabajador> {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<Trabajador> listar(Trabajador modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

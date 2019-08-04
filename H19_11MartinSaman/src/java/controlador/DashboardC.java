@@ -24,7 +24,7 @@ public class DashboardC implements Serializable {
     public void onInit() {
         listar();
     }
-
+    
     public void listar() {
         try {
             barVentas = daoDashboard.barVentas(idsuc);

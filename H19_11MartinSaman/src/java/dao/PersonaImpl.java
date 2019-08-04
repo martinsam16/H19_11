@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Persona;
-import org.primefaces.model.StreamedContent;
 
 public class PersonaImpl extends Conexion implements ICrud<Persona> {
 
@@ -96,11 +95,6 @@ public class PersonaImpl extends Conexion implements ICrud<Persona> {
     }
 
     @Override
-    public StreamedContent generarReporte(Persona modelo) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public boolean existe(Persona modelo, List<Persona> listaModelo) {
         for (Persona per : listaModelo) {
             if (modelo.equals(per)) {
@@ -108,6 +102,11 @@ public class PersonaImpl extends Conexion implements ICrud<Persona> {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<Persona> listar(Persona modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

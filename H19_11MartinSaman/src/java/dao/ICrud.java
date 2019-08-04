@@ -1,8 +1,6 @@
 package dao;
 
 import java.util.List;
-import net.sf.jasperreports.engine.JRException;
-import org.primefaces.model.StreamedContent;
 
 public interface ICrud<T> {
 
@@ -16,8 +14,8 @@ public interface ICrud<T> {
 
     public List<T> listar() throws Exception;
 
-    public StreamedContent generarReporte(T modelo) throws JRException, Exception;
+    public List<T> listar(T modelo) throws Exception;
 
-    // Validaciones
+    // Validaciones -- En este caso no es necesario crear una interface para las validaciones
     public boolean existe(T modelo, List<T> listaModelo);
 }

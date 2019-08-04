@@ -136,7 +136,7 @@ public class VentaC implements Serializable {
     }
 
     public void actualizarReporte() throws Exception {
-        reporte = daoVenta.generarReporte(venta);
+        reporte = daoVenta.generarReporteIndividual(venta);
     }
 
     public List<VentaDetalle> getListaDetalleFiltrado() {

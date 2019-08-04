@@ -21,7 +21,7 @@ import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
-public class VentaImpl extends Conexion implements ICrud<Venta> {
+public class VentaImpl extends Conexion implements ICrud<Venta>, IReporte<Venta> {
 
     @Override
     public void registrar(Venta modelo) throws Exception {
@@ -78,7 +78,17 @@ public class VentaImpl extends Conexion implements ICrud<Venta> {
     }
 
     @Override
-    public StreamedContent generarReporte(Venta modelo) throws Exception {
+    public boolean existe(Venta modelo, List<Venta> listaModelo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Venta> listar(Venta modelo) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public StreamedContent generarReporteIndividual(Venta modelo) throws JRException, Exception {
         InputStream inputStream = null;
 
         Map parameters = new HashMap();
@@ -87,22 +97,22 @@ public class VentaImpl extends Conexion implements ICrud<Venta> {
 
         try {
 
-            ByteArrayOutputStream Teste = new ByteArrayOutputStream();
+            ByteArrayOutputStream salida = new ByteArrayOutputStream();
             File jasperReport = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("Reportes/Venta_Boleta.jasper"));
 
-            JasperPrint print = JasperFillManager.fillReport(jasperReport.getPath(), parameters, this.conectar());
+            JasperPrint jPrint = JasperFillManager.fillReport(jasperReport.getPath(), parameters, this.conectar());
 
             JRExporter exporter = new net.sf.jasperreports.engine.export.JRPdfExporter();
 
-            exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, Teste);
+            exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, salida);
 
-            exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
-            
+            exporter.setParameter(JRExporterParameter.JASPER_PRINT, jPrint);
+
             exporter.setParameter(JRPdfExporterParameter.PDF_JAVASCRIPT, "this.print();");
-            
+
             exporter.exportReport();
 
-            inputStream = new ByteArrayInputStream(Teste.toByteArray());
+            inputStream = new ByteArrayInputStream(salida.toByteArray());
 
         } catch (JRException e) {
             e.printStackTrace();
@@ -111,11 +121,10 @@ public class VentaImpl extends Conexion implements ICrud<Venta> {
         }
 
         return new DefaultStreamedContent(inputStream, "application/pdf", "Boleta_" + String.valueOf(modelo.getFECVEN()));
-
     }
 
     @Override
-    public boolean existe(Venta modelo, List<Venta> listaModelo) {
+    public StreamedContent generarReporteGeneral(Venta modelo) throws JRException, Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

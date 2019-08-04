@@ -12,7 +12,6 @@ import modelo.Sucursal;
 import modelo.Trabajador;
 import modelo.Venta;
 import modelo.VentaDetalle;
-import org.primefaces.model.StreamedContent;
 
 public class VentaDetalleImpl extends Conexion implements ICrud<VentaDetalle> {
 

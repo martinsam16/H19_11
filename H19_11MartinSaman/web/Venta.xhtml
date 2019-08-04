@@ -153,7 +153,7 @@
                                       filterBy="#{detalle.venta.FECVEN}"
                                       filterMatchMode="equals">
                                 <f:facet name="filter">
-                                    <p:calendar>
+                                    <p:calendar mindate="#{ventaC.fecha1}" maxdate="#{ventaC.fecha2}">
                                         <p:ajax event="dateSelect" oncomplete="PF('wvTblVentas').filter()" update="tblVentas"/>
                                         <p:ajax event="change" oncomplete="PF('wvTblVentas').filter()" update="tblVentas"/>
                                     </p:calendar>

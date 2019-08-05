@@ -41,6 +41,12 @@
                 <f:facet name="header">
                     Lista de Equipos Inventariados
                 </f:facet>
+                <f:facet name="footer">
+                    <p:outputPanel>
+                        <p:commandButton value="Generar Reporte" actionListener="#{inventarioC.generarReporteGeneral()}" 
+                                         update="tblInventario :frmReporte"/>
+                    </p:outputPanel>
+                </f:facet>
                 <p:column headerText="Nombre equipo" filterBy="#{inventario.equipo.NOMEQ}" filterMatchMode="contains">
                     <h:outputText value="#{inventario.equipo.NOMEQ}"/>
                 </p:column>
@@ -73,6 +79,9 @@
                 <p:menuitem value="Modificar" oncomplete="PF('dlgModInventario').show();" update=":frmModInventario"/>
                 <p:menuitem value="Eliminar" actionListener="#{inventarioC.eliminar()}" oncomplete="PF('wvTblInventario').filter()" update="frmDatosInventario"/>
             </p:contextMenu>
+        </h:form>
+        <h:form id="frmReporte" style="height: 100%;">
+            <p:media value="#{inventarioC.reporte}" cache="false" player="pdf" height="100%" width="100%"/>
         </h:form>
         <p:dialog widgetVar="dlgModInventario">
             <h:form id="frmModInventario"><p:growl autoUpdate="true"/>

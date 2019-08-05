@@ -27,7 +27,7 @@
             <p:dataTable id="tblEquipo" var="equipo" 
                          selection="#{equipoC.equipoSeleccionado}"
                          selectionMode="single"
-                         rowKey="#{equipo.IDEQ}"
+                         rowKey="#{equipo.IDEQ}" sortBy="#{equipo.NOMEQ}"
                          value="#{equipoC.listaEquipo}"
                          filteredValue="#{equipoC.listaEquipoFiltrado}"
                          rows="10" paginator="true"

@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import modelo.Inventario;
+import org.primefaces.model.StreamedContent;
 
 @Named(value = "inventarioC")
 @SessionScoped
@@ -18,6 +19,7 @@ public class InventarioC implements Serializable {
     Inventario inventario, inventarioSeleccionado;
     List<Inventario> listaInventario, listaInventarioFiltrado;
     InventarioImpl daoInventario;
+    StreamedContent reporte;
 
     public InventarioC() {
         inventario = new Inventario();
@@ -33,6 +35,10 @@ public class InventarioC implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void generarReporteGeneral() throws Exception {
+        reporte = daoInventario.generarReporteGeneral(null);
     }
 
     public void listar() throws Exception {
@@ -115,6 +121,14 @@ public class InventarioC implements Serializable {
 
     public void setListaInventario(List<Inventario> listaInventario) {
         this.listaInventario = listaInventario;
+    }
+
+    public StreamedContent getReporte() {
+        return reporte;
+    }
+
+    public void setReporte(StreamedContent reporte) {
+        this.reporte = reporte;
     }
 
 }
